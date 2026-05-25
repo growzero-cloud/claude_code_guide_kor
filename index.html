@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 완전 정복 — 생초보 가이드 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#7c6aff;--accent2:#a78bfa;
+  --bg:#0f0f14;--bg2:#16161f;--bg3:#1e1e2a;
+  --border:#2a2a3a;--text:#e2e2f0;--text2:#9090b0;--text3:#5555a0;
+  --code-bg:#0d0d14;--green:#4ade80;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;
+  --sidebar-w:262px;--header-h:56px;
+}
+[data-theme="light"]{
+  --bg:#f6f6fb;--bg2:#ffffff;--bg3:#ededf8;
+  --border:#dcdcf0;--text:#1a1a2e;--text2:#4a4a90;--text3:#8888c0;--code-bg:#f0f0fa;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.78;min-height:100vh;overflow-x:hidden}
+
+/* HEADER */
+#header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.2rem;gap:.75rem;z-index:100;backdrop-filter:blur(14px)}
+#header-logo{font-size:1.05rem;font-weight:800;color:var(--accent2);white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:.4rem}
+#header-logo small{color:var(--text3);font-weight:400;font-size:.78rem}
+#search-wrap{flex:1;max-width:380px;position:relative}
+#search{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.42rem .85rem .42rem 2.1rem;color:var(--text);font-size:.88rem;font-family:inherit;outline:none;transition:border-color .2s}
+#search:focus{border-color:var(--accent)}
+#search-icon{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.9rem;pointer-events:none}
+#search-clear{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:.82rem;display:none}
+#search-result-bar{font-size:.75rem;color:var(--text3);white-space:nowrap;display:none}
+.header-right{display:flex;align-items:center;gap:.4rem;margin-left:auto}
+#progress-pill{font-size:.75rem;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:.22rem .75rem;color:var(--text2);white-space:nowrap}
+#progress-pill b{color:var(--accent2)}
+#theme-btn,#menu-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:.38rem .65rem;color:var(--text2);cursor:pointer;font-size:.95rem;transition:all .2s}
+#theme-btn:hover,#menu-btn:hover{border-color:var(--accent);color:var(--accent2)}
+#menu-btn{display:none}
+
+/* SIDEBAR */
+#sidebar{position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:.75rem 0 2rem;z-index:90;transition:transform .25s}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sb-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:.7rem 1.1rem .2rem;display:block}
+.sb-link{display:flex;align-items:center;gap:.45rem;padding:.35rem 1.1rem;font-size:.8rem;color:var(--text2);text-decoration:none;border-left:2px solid transparent;transition:all .14s;cursor:pointer}
+.sb-link:hover{color:var(--text);background:var(--bg3)}
+.sb-link.active{color:var(--accent2);border-left-color:var(--accent);background:rgba(124,106,255,.07)}
+.sb-link .ck{margin-left:auto;color:var(--green);font-size:.72rem;opacity:0}
+.sb-link.done .ck{opacity:1}
+.sb-num{font-size:.68rem;background:var(--bg3);border-radius:4px;padding:.03rem .32rem;color:var(--text3);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);padding-top:var(--header-h);min-height:100vh}
+#content{max-width:800px;margin:0 auto;padding:2.5rem 2rem 8rem}
+
+/* SECTIONS */
+.section{padding:3rem 0;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.sec-hdr{display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.sec-num{font-size:.7rem;font-family:'JetBrains Mono',monospace;background:var(--accent);color:#fff;border-radius:6px;padding:.18rem .5rem;flex-shrink:0}
+.section h2{font-size:1.45rem;font-weight:800;color:var(--text)}
+.badge{font-size:.65rem;font-weight:700;letter-spacing:.05em;padding:.13rem .45rem;border-radius:4px;text-transform:uppercase;flex-shrink:0}
+.badge-new{background:rgba(74,222,128,.12);color:var(--green);border:1px solid rgba(74,222,128,.28)}
+.badge-upd{background:rgba(124,106,255,.12);color:var(--accent2);border:1px solid rgba(124,106,255,.28)}
+.badge-hot{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.28)}
+.done-btn{margin-left:auto;background:none;border:1px solid var(--border);border-radius:6px;padding:.22rem .65rem;font-size:.75rem;color:var(--text3);cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
+.done-btn:hover{border-color:var(--green);color:var(--green)}
+.done-btn.on{background:rgba(74,222,128,.1);border-color:var(--green);color:var(--green)}
+
+h3{font-size:1.05rem;font-weight:700;color:var(--text);margin:2rem 0 .65rem}
+h4{font-size:.92rem;font-weight:700;color:var(--accent2);margin:1.4rem 0 .4rem}
+p{color:var(--text2);margin:.45rem 0}
+strong{color:var(--text);font-weight:600}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+ul,ol{color:var(--text2);padding-left:1.4rem;margin:.5rem 0}
+li{margin:.25rem 0}
+li strong{color:var(--text)}
+
+/* CODE */
+.cb{position:relative;margin:.85rem 0;border-radius:10px;background:var(--code-bg);border:1px solid var(--border);overflow:hidden}
+.cb-lbl{font-size:.68rem;font-family:'JetBrains Mono',monospace;color:var(--text3);padding:.38rem .85rem;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.4rem}
+.os{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:.02rem .32rem;font-size:.65rem}
+pre{padding:.9rem 1rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.65;color:#c9d1d9}
+pre::-webkit-scrollbar{height:4px}
+pre::-webkit-scrollbar-thumb{background:var(--border)}
+.cp{position:absolute;top:.4rem;right:.4rem;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:.18rem .5rem;font-size:.7rem;color:var(--text3);cursor:pointer;transition:all .18s;font-family:'JetBrains Mono',monospace}
+.cp:hover{border-color:var(--accent);color:var(--accent2)}
+.cp.ok{color:var(--green);border-color:var(--green)}
+code{font-family:'JetBrains Mono',monospace;font-size:.84em;background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:.1em .32em;color:var(--accent2)}
+
+/* CALLOUTS */
+.box{border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:3px solid}
+.box-tip{background:rgba(124,106,255,.07);border-color:var(--accent)}
+.box-warn{background:rgba(251,191,36,.07);border-color:var(--yellow)}
+.box-info{background:rgba(96,165,250,.07);border-color:var(--blue)}
+.box-new{background:rgba(74,222,128,.07);border-color:var(--green)}
+.box-title{font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.3rem}
+.box-tip .box-title{color:var(--accent2)}
+.box-warn .box-title{color:var(--yellow)}
+.box-info .box-title{color:var(--blue)}
+.box-new .box-title{color:var(--green)}
+
+/* TABLE */
+.tw{overflow-x:auto;margin:.85rem 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:var(--bg3);color:var(--text);font-weight:600;padding:.6rem .95rem;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:.55rem .95rem;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(124,106,255,.04)}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.65rem;margin:.85rem 0}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card-ico{font-size:1.35rem;margin-bottom:.4rem}
+.card-t{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
+.card-d{font-size:.76rem;color:var(--text2)}
+
+/* STEPS */
+.steps{counter-reset:s;margin:.85rem 0}
+.step{display:flex;gap:.9rem;margin:.65rem 0;counter-increment:s}
+.sn{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:.74rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:.22rem}
+.sb-body{flex:1}
+.st{font-weight:700;color:var(--text);margin-bottom:.2rem;font-size:.92rem}
+.sd{font-size:.83rem;color:var(--text2)}
+
+/* FAQ */
+.faq{border:1px solid var(--border);border-radius:10px;margin:.45rem 0;overflow:hidden}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:.85rem 1rem;font-family:inherit;font-size:.88rem;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.9rem;transition:background .18s}
+.faq-q:hover,.faq-q.open{background:var(--bg3)}
+.faq-q.open{color:var(--accent2)}
+.fa{font-size:.72rem;transition:transform .22s;color:var(--text3);flex-shrink:0}
+.faq-q.open .fa{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .28s ease}
+.faq-inner{padding:.1rem 1rem .9rem;font-size:.84rem;color:var(--text2);border-top:1px solid var(--border)}
+
+/* TABS */
+.tabs{margin:.85rem 0}
+.tab-nav{display:flex;gap:.25rem;border-bottom:1px solid var(--border)}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:.45rem .85rem;font-size:.8rem;color:var(--text3);cursor:pointer;font-family:inherit;transition:all .18s;margin-bottom:-1px}
+.tab-btn.on{color:var(--accent2);border-bottom-color:var(--accent)}
+.tab-pane{display:none;padding:.7rem 0}
+.tab-pane.on{display:block}
+
+/* HIGHLIGHT / mark */
+mark{background:rgba(124,106,255,.32);color:var(--text);border-radius:2px;padding:0 1px}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:1.8rem;right:1.4rem;background:var(--accent);color:#fff;border:none;border-radius:10px;width:38px;height:38px;font-size:1rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(124,106,255,.4);z-index:99;transition:all .18s}
+#btt:hover{transform:translateY(-2px)}
+#btt.on{display:flex}
+
+/* SIDEBAR OVERLAY */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:89}
+#overlay.on{display:block}
+
+/* CHIP */
+.chip{display:inline-flex;align-items:center;gap:.28rem;font-size:.7rem;font-family:'JetBrains Mono',monospace;background:rgba(124,106,255,.1);border:1px solid rgba(124,106,255,.28);border-radius:20px;padding:.18rem .6rem;color:var(--accent2)}
+
+/* RESPONSIVE */
+@media(max-width:820px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #menu-btn{display:flex}
+  #content{padding:2rem 1.1rem 5rem}
+  .grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.grid{grid-template-columns:1fr}#header-logo small{display:none}}
+</style>
+</head>
+<body>
+<div id="overlay"></div>
+
+<header id="header">
+  <a href="#" id="header-logo">⚡ Claude Code <small>완전 정복</small></a>
+  <div id="search-wrap">
+    <span id="search-icon">🔍</span>
+    <input id="search" type="text" placeholder="검색..." autocomplete="off">
+    <button id="search-clear">✕</button>
+  </div>
+  <span id="search-result-bar"></span>
+  <div class="header-right">
+    <span id="progress-pill">진도 <b id="dc">0</b>/<b id="tc">0</b></span>
+    <button id="theme-btn" title="테마 전환">☀️</button>
+    <button id="menu-btn">☰</button>
+  </div>
+</header>
+
+<nav id="sidebar"></nav>
+
+<main id="main">
+<div id="content">
+
+<!-- HERO -->
+<div style="padding:2.2rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:.5rem">
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem">
+    <span class="chip">✦ 2026 최신판</span>
+    <span class="chip">공식 문서 기반</span>
+    <span class="badge badge-new">생초보 전용</span>
+  </div>
+  <h1 style="font-size:2rem;font-weight:900;line-height:1.25;margin-bottom:.7rem">Claude Code<br><span style="color:var(--accent2)">완전 정복 가이드</span></h1>
+  <p style="color:var(--text2);max-width:500px;font-size:.97rem">터미널이 처음이어도 OK. 설치부터 자동화까지,<br>공식 문서 기반 최신 기능을 단계별로 마스터한다.</p>
+  <div style="display:flex;gap:.5rem;margin-top:1.2rem;flex-wrap:wrap">
+    <a href="#s01" style="background:var(--accent);color:#fff;border-radius:8px;padding:.5rem 1.2rem;font-size:.87rem;font-weight:700;text-decoration:none">지금 시작하기 →</a>
+    <a href="#s00" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:8px;padding:.5rem 1.2rem;font-size:.87rem;text-decoration:none">자주 묻는 질문</a>
+  </div>
+</div>
+
+<!-- S00: FAQ -->
+<section class="section" id="s00">
+  <div class="sec-hdr">
+    <span class="sec-num">00</span>
+    <h2>시작 전 핵심 질문</h2>
+    <button class="done-btn" data-sid="s00">완료 표시</button>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">Claude Code가 뭔가요? ChatGPT랑 뭐가 달라요?<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p>ChatGPT는 대화창에서 질문하는 방식이고, Claude Code는 <strong>내 컴퓨터 파일을 직접 읽고 수정하는 AI</strong>입니다. 폴더 전체를 이해하고, 코드를 실제로 짜고, 터미널 명령을 실행하고, Git 커밋까지 합니다. <strong>"내 컴퓨터에서 일하는 AI 직원"</strong>에 가깝습니다.</p>
+    </div></div>
+  </div>
+  <div class="faq">
+    <button class="faq-q">코딩을 전혀 몰라도 쓸 수 있나요?<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p>네. <strong>데스크탑 앱</strong>을 쓰면 터미널도 필요 없습니다. 앱 설치 후 폴더를 열고 말하기만 하면 됩니다. "엑셀 파일 정리해줘", "이 사진들 이름 바꿔줘", "웹페이지 만들어줘" 수준으로도 충분히 동작합니다.</p>
+    </div></div>
+  </div>
+  <div class="faq">
+    <button class="faq-q">npm이나 Node.js를 설치해야 하나요?<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p><strong>2025년부터는 필요 없습니다.</strong> 공식 설치 스크립트(curl/PowerShell)나 Homebrew, WinGet으로 네이티브 설치됩니다. npm으로도 여전히 설치할 수 있지만 권장 방식이 아닙니다.</p>
+    </div></div>
+  </div>
+  <div class="faq">
+    <button class="faq-q">돈이 얼마나 드나요?<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p><strong>Pro</strong> ($20/월), <strong>Max 5x</strong> ($100/월), <strong>Max 20x</strong> ($200/월) 구독 플랜이 있습니다. <strong>무료 플랜은 Claude Code를 지원하지 않습니다.</strong> API 키로 연결하면 토큰 단위 과금도 가능합니다. 처음엔 Pro로 시작하는 걸 추천합니다.</p>
+    </div></div>
+  </div>
+  <div class="faq">
+    <button class="faq-q">Windows에서도 되나요?<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p>됩니다. Windows 10 1809 이상을 지원합니다. PowerShell 한 줄, WinGet, 또는 데스크탑 앱으로 설치합니다. WSL2를 쓰면 더 안정적이지만 필수는 아닙니다.</p>
+    </div></div>
+  </div>
+  <div class="faq">
+    <button class="faq-q">내 파일이 Anthropic 서버로 전송되나요?<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p>Claude에게 명시적으로 전달한 내용(대화, 파일 내용)만 API를 통해 전송됩니다. Anthropic은 API 데이터로 모델을 학습하지 않습니다. 민감한 파일은 <code>.claudeignore</code>에 등록하면 됩니다.</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- S01: 설치 -->
+<section class="section" id="s01">
+  <div class="sec-hdr">
+    <span class="sec-num">01</span>
+    <h2>설치 방법</h2>
+    <button class="done-btn" data-sid="s01">완료 표시</button>
+  </div>
+
+  <p>상황에 맞는 방법을 하나 골라라. <strong>대부분의 경우 데스크탑 앱이 가장 편하다.</strong></p>
+
+  <div class="grid" style="margin-bottom:1.2rem">
+    <div class="card" style="border-color:var(--accent)"><div class="card-ico">🖥️</div><div class="card-t">데스크탑 앱 <span class="badge badge-new" style="vertical-align:middle">추천</span></div><div class="card-d">설치 파일 클릭 한 번. GUI, 알림, 전역 단축키 포함</div></div>
+    <div class="card"><div class="card-ico">💻</div><div class="card-t">VS Code 확장</div><div class="card-d">에디터 안에서 인라인으로 사용</div></div>
+    <div class="card"><div class="card-ico">⌨️</div><div class="card-t">터미널 스크립트</div><div class="card-d">한 줄 명령어. 자동 업데이트 포함</div></div>
+    <div class="card"><div class="card-ico">🍺</div><div class="card-t">Homebrew / WinGet</div><div class="card-d">패키지 관리자 사용</div></div>
+    <div class="card"><div class="card-ico">🌐</div><div class="card-t">웹 (claude.ai/code)</div><div class="card-d">설치 없이 브라우저에서</div></div>
+  </div>
+
+  <h3>방법 A — 데스크탑 앱 (가장 쉬움)</h3>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb-body"><div class="st">다운로드</div><div class="sd"><a href="https://claude.ai/download">claude.ai/download</a> 에서 Mac 또는 Windows 버전 내려받기</div></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb-body"><div class="st">설치</div><div class="sd">Mac: .dmg 열고 Applications 끌어넣기 / Windows: .exe 실행</div></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb-body"><div class="st">로그인 후 폴더 열기</div><div class="sd">앱 실행 → Claude.ai 계정 로그인 → 작업 폴더 열면 바로 사용 가능</div></div></div>
+  </div>
+
+  <h3>방법 B — 터미널 스크립트 (개발자)</h3>
+  <p>자동 백그라운드 업데이트가 포함된 공식 CLI 설치 방법이다.</p>
+
+  <div class="tabs">
+    <div class="tab-nav">
+      <button class="tab-btn on" data-tab="mac">Mac / Linux / WSL</button>
+      <button class="tab-btn" data-tab="win">Windows (PowerShell)</button>
+      <button class="tab-btn" data-tab="wincmd">Windows (CMD)</button>
+    </div>
+    <div class="tab-pane on" id="tab-mac">
+      <div class="cb"><div class="cb-lbl"><span class="os">Mac / Linux / WSL</span> 터미널</div>
+        <pre>curl -fsSL https://claude.ai/install.sh | bash</pre>
+        <button class="cp">복사</button></div>
+    </div>
+    <div class="tab-pane" id="tab-win">
+      <div class="cb"><div class="cb-lbl"><span class="os">Windows</span> PowerShell (관리자)</div>
+        <pre>irm https://claude.ai/install.ps1 | iex</pre>
+        <button class="cp">복사</button></div>
+    </div>
+    <div class="tab-pane" id="tab-wincmd">
+      <div class="cb"><div class="cb-lbl"><span class="os">Windows</span> CMD</div>
+        <pre>curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd</pre>
+        <button class="cp">복사</button></div>
+    </div>
+  </div>
+
+  <h3>방법 C — Homebrew (Mac)</h3>
+  <div class="cb"><pre>brew install --cask claude-code</pre><button class="cp">복사</button></div>
+  <p style="font-size:.83rem">최신 버전: <code>brew install --cask claude-code@latest</code></p>
+
+  <h3>방법 D — WinGet (Windows)</h3>
+  <div class="cb"><pre>winget install Anthropic.ClaudeCode</pre><button class="cp">복사</button></div>
+
+  <h3>방법 E — Linux 패키지 관리자</h3>
+  <div class="tabs">
+    <div class="tab-nav">
+      <button class="tab-btn on" data-tab="apt">apt (Ubuntu/Debian)</button>
+      <button class="tab-btn" data-tab="dnf">dnf (Fedora/RHEL)</button>
+      <button class="tab-btn" data-tab="apk">apk (Alpine)</button>
+    </div>
+    <div class="tab-pane on" id="tab-apt">
+      <div class="cb"><pre>sudo install -d -m 0755 /etc/apt/keyrings
+sudo curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
+  -o /etc/apt/keyrings/claude-code.asc
+echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] \
+  https://downloads.claude.ai/claude-code/apt/stable stable main" \
+  | sudo tee /etc/apt/sources.list.d/claude-code.list
+sudo apt update && sudo apt install claude-code</pre><button class="cp">복사</button></div>
+    </div>
+    <div class="tab-pane" id="tab-dnf">
+      <div class="cb"><pre>sudo tee /etc/yum.repos.d/claude-code.repo &lt;&lt;'EOF'
+[claude-code]
+name=Claude Code
+baseurl=https://downloads.claude.ai/claude-code/rpm/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://downloads.claude.ai/keys/claude-code.asc
+EOF
+sudo dnf install claude-code</pre><button class="cp">복사</button></div>
+    </div>
+    <div class="tab-pane" id="tab-apk">
+      <div class="cb"><pre>wget -O /etc/apk/keys/claude-code.rsa.pub \
+  https://downloads.claude.ai/keys/claude-code.rsa.pub
+echo "https://downloads.claude.ai/claude-code/apk/stable" >> /etc/apk/repositories
+apk add claude-code</pre><button class="cp">복사</button></div>
+    </div>
+  </div>
+
+  <h3>시스템 요구사항</h3>
+  <div class="tw"><table>
+    <tr><th>항목</th><th>요구사항</th></tr>
+    <tr><td>macOS</td><td>13.0 이상</td></tr>
+    <tr><td>Windows</td><td>10 1809+ 또는 Server 2019+</td></tr>
+    <tr><td>Linux</td><td>Ubuntu 20.04+, Debian 10+, Alpine 3.19+</td></tr>
+    <tr><td>RAM</td><td>4GB 이상</td></tr>
+    <tr><td>계정</td><td>Claude.ai Pro/Max/Team/Enterprise (무료 플랜 불가)</td></tr>
+  </table></div>
+
+  <h3>설치 확인</h3>
+  <div class="cb"><pre>claude --version   # 버전 출력되면 성공
+claude doctor      # 설치 및 설정 진단</pre><button class="cp">복사</button></div>
+
+  <div class="box box-tip">
+    <div class="box-title">💡 업데이트</div>
+    <p>터미널 스크립트로 설치했다면 자동 백그라운드 업데이트가 적용된다. 수동으로 업데이트하려면 <code>claude update</code>.</p>
+  </div>
+</section>
+
+<!-- S02: 로그인 -->
+<section class="section" id="s02">
+  <div class="sec-hdr">
+    <span class="sec-num">02</span>
+    <h2>로그인 &amp; 인증</h2>
+    <button class="done-btn" data-sid="s02">완료 표시</button>
+  </div>
+
+  <h3>처음 실행 — 브라우저 로그인</h3>
+  <div class="cb"><pre>claude</pre><button class="cp">복사</button></div>
+  <p>처음 실행하면 브라우저가 자동으로 열리고 <strong>claude.ai 로그인 페이지</strong>가 나타난다. 로그인하면 터미널에 자동으로 인증 완료된다.</p>
+
+  <h3>인증 방식</h3>
+  <div class="tw"><table>
+    <tr><th>방식</th><th>대상</th><th>설정 방법</th></tr>
+    <tr><td><strong>Claude.ai 계정</strong></td><td>Pro/Max 구독자</td><td>첫 실행 시 브라우저 자동 열림</td></tr>
+    <tr><td><strong>API 키</strong></td><td>API 직접 사용 개발자</td><td>환경 변수 <code>ANTHROPIC_API_KEY</code></td></tr>
+    <tr><td><strong>Amazon Bedrock</strong></td><td>AWS 사용자</td><td><code>/setup-bedrock</code></td></tr>
+    <tr><td><strong>Google Vertex AI</strong></td><td>GCP 사용자</td><td><code>/setup-vertex</code></td></tr>
+  </table></div>
+
+  <h3>인증 상태 확인 / 로그아웃</h3>
+  <div class="cb"><pre>claude auth status    # 현재 로그인 상태 확인
+claude auth logout    # 로그아웃</pre><button class="cp">복사</button></div>
+</section>
+
+<!-- S03: 첫 세션 -->
+<section class="section" id="s03">
+  <div class="sec-hdr">
+    <span class="sec-num">03</span>
+    <h2>첫 번째 세션</h2>
+    <button class="done-btn" data-sid="s03">완료 표시</button>
+  </div>
+
+  <h3>데스크탑 앱으로 시작 (추천)</h3>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb-body"><div class="st">앱 실행 후 폴더 열기</div><div class="sd">앱 상단 폴더 아이콘 클릭 → 작업할 폴더 선택. 또는 폴더를 앱 창으로 드래그.</div></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb-body"><div class="st">대화창에서 바로 말하기</div><div class="sd">폴더가 열리면 즉시 대화 시작 가능. 별도 설정 없음.</div></div></div>
+  </div>
+
+  <h3>터미널 CLI로 시작</h3>
+  <div class="cb"><div class="cb-lbl">터미널</div>
+    <pre>cd ~/Desktop/내프로젝트   # 작업 폴더로 이동 (필수!)
+claude                     # Claude Code 실행</pre>
+    <button class="cp">복사</button></div>
+
+  <div class="box box-warn">
+    <div class="box-title">⚠️ CLI 사용 시 주의</div>
+    <p>Claude Code는 <strong>현재 폴더를 기준</strong>으로 파일을 읽고 쓴다. 반드시 작업 폴더로 이동한 뒤 <code>claude</code>를 실행해야 한다.</p>
+  </div>
+
+  <h3>대화 방식</h3>
+  <p>앱이든 터미널이든 동일하다. 명령어 문법 없이 그냥 말하면 된다.</p>
+  <div class="cb"><div class="cb-lbl">대화 예시</div>
+    <pre>> 이 폴더에 어떤 파일들이 있는지 설명해줘
+> README.md 파일을 만들어줘
+> index.html에 다크 모드를 추가해줘
+> 방금 변경한 내용을 커밋해줘</pre></div>
+
+  <h3>필수 단축키</h3>
+  <div class="tw"><table>
+    <tr><th>단축키</th><th>동작</th></tr>
+    <tr><td><code>Enter</code></td><td>메시지 전송</td></tr>
+    <tr><td><code>Shift+Enter</code></td><td>줄 바꿈 (전송 안 함)</td></tr>
+    <tr><td><code>↑ / ↓</code></td><td>이전/다음 명령어 불러오기</td></tr>
+    <tr><td><code>Ctrl+C</code></td><td>현재 작업 중단</td></tr>
+    <tr><td><code>Ctrl+D</code> 또는 <code>/exit</code></td><td>종료</td></tr>
+    <tr><td><code>Tab</code></td><td>자동 완성</td></tr>
+    <tr><td><code>Shift+Tab</code></td><td>권한 모드 순환 (auto 등)</td></tr>
+  </table></div>
+
+  <h3>세션 이어받기</h3>
+  <div class="cb"><pre>claude -c              # 가장 최근 세션 이어서 시작
+claude -r "세션이름"    # 특정 세션 재개
+claude -n "이름"       # 새 세션 이름 지정</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S04: 슬래시 명령어 -->
+<section class="section" id="s04">
+  <div class="sec-hdr">
+    <span class="sec-num">04</span>
+    <h2>슬래시 명령어 &amp; CLI</h2>
+    <button class="done-btn" data-sid="s04">완료 표시</button>
+  </div>
+
+  <p>대화창에서 <code>/</code>로 시작하는 명령어는 Claude Code의 내장 기능이다.</p>
+
+  <h3>자주 쓰는 슬래시 명령어</h3>
+  <div class="tw"><table>
+    <tr><th>명령어</th><th>설명</th></tr>
+    <tr><td><code>/help</code></td><td>도움말 전체 보기</td></tr>
+    <tr><td><code>/init</code></td><td>프로젝트 CLAUDE.md 자동 생성</td></tr>
+    <tr><td><code>/clear</code></td><td>새 대화 시작 (컨텍스트 초기화)</td></tr>
+    <tr><td><code>/compact</code></td><td>대화 요약해서 컨텍스트 절약</td></tr>
+    <tr><td><code>/memory</code></td><td>메모리 파일 보기 · 편집 · 자동메모리 관리</td></tr>
+    <tr><td><code>/model</code></td><td>사용 모델 변경</td></tr>
+    <tr><td><code>/effort</code></td><td>노력 수준 조정 (low/medium/high/xhigh/max)</td></tr>
+    <tr><td><code>/plan</code></td><td>Plan 모드 진입 (실행 전 계획 확인)</td></tr>
+    <tr><td><code>/hooks</code></td><td>훅(자동화) 설정 보기</td></tr>
+    <tr><td><code>/mcp</code></td><td>MCP 서버 관리</td></tr>
+    <tr><td><code>/permissions</code></td><td>도구 권한 규칙 관리</td></tr>
+    <tr><td><code>/skills</code></td><td>사용 가능한 스킬 목록 보기</td></tr>
+    <tr><td><code>/doctor</code></td><td>설치 및 설정 진단</td></tr>
+    <tr><td><code>/status</code></td><td>버전, 모델, 계정 정보</td></tr>
+    <tr><td><code>/usage</code></td><td>세션 비용 및 사용량</td></tr>
+    <tr><td><code>/rewind</code></td><td>이전 지점으로 되감기</td></tr>
+    <tr><td><code>/diff</code></td><td>커밋되지 않은 변경사항 시각화</td></tr>
+    <tr><td><code>/exit</code></td><td>종료</td></tr>
+  </table></div>
+
+  <h3>번들 스킬 (기본 포함)</h3>
+  <p>설치 직후부터 사용 가능. Claude가 상황에 맞게 자동 호출하거나 직접 부를 수 있다.</p>
+  <div class="tw"><table>
+    <tr><th>스킬</th><th>기능</th><th>비고</th></tr>
+    <tr><td><code>/code-review</code></td><td>diff를 버그/정확성 관점에서 검토</td><td></td></tr>
+    <tr><td><code>/batch</code></td><td>대규모 변경을 병렬 worktree로 분산 실행</td><td></td></tr>
+    <tr><td><code>/run</code></td><td>앱 빌드 및 실행해서 변경사항 검증</td><td>v2.1.145+</td></tr>
+    <tr><td><code>/verify</code></td><td>빌드/실행/검증 (테스트 대신 실제 동작 확인)</td><td>v2.1.145+</td></tr>
+    <tr><td><code>/run-skill-generator</code></td><td>/run, /verify용 프로젝트별 레시피 생성</td><td>v2.1.145+</td></tr>
+    <tr><td><code>/claude-api</code></td><td>Claude API 참조 자료 로드</td><td></td></tr>
+    <tr><td><code>/loop [간격] [프롬프트]</code></td><td>프롬프트 반복 실행 (자동 페이싱)</td><td></td></tr>
+    <tr><td><code>/schedule</code></td><td>Routines 생성/실행 (클라우드 스케줄링)</td><td></td></tr>
+    <tr><td><code>/ultrareview [PR]</code></td><td>클라우드 멀티에이전트 코드 리뷰</td><td>Pro/Max 3회 무료</td></tr>
+    <tr><td><code>/security-review</code></td><td>보안 취약점 분석</td><td></td></tr>
+  </table></div>
+
+  <h3>자주 쓰는 CLI 플래그</h3>
+  <div class="cb"><pre>claude -p "할 일"           # 대화 없이 바로 실행하고 종료 (--print)
+claude -c                   # 마지막 세션 이어서 (--continue)
+claude --model sonnet       # 모델 지정
+claude --effort high        # 노력 수준 설정
+claude --permission-mode plan   # Plan 모드로 시작
+claude --add-dir ../공유폴더    # 추가 디렉토리 접근 허용
+claude --bg "작업 설명"     # 백그라운드 에이전트로 실행</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S05: CLAUDE.md -->
+<section class="section" id="s05">
+  <div class="sec-hdr">
+    <span class="sec-num">05</span>
+    <h2>CLAUDE.md — 나만의 작업 규칙</h2>
+    <button class="done-btn" data-sid="s05">완료 표시</button>
+  </div>
+
+  <p><code>CLAUDE.md</code>는 Claude가 세션 시작 시 <strong>자동으로 읽는 규칙 파일</strong>이다. "항상 한국어로 답해", "변수명은 camelCase", "테스트 꼭 작성" 같은 규칙을 한 번 써두면 매번 말할 필요가 없다.</p>
+
+  <h3>파일 위치 (범위별)</h3>
+  <div class="tw"><table>
+    <tr><th>위치</th><th>범위</th><th>공유</th></tr>
+    <tr><td><code>~/.claude/CLAUDE.md</code></td><td>내 모든 프로젝트</td><td>본인만</td></tr>
+    <tr><td><code>./CLAUDE.md</code> 또는 <code>./.claude/CLAUDE.md</code></td><td>해당 프로젝트</td><td>팀원 (Git 커밋)</td></tr>
+    <tr><td><code>./CLAUDE.local.md</code></td><td>해당 프로젝트 (개인)</td><td>본인만 (.gitignore에 추가)</td></tr>
+  </table></div>
+
+  <div class="box box-tip">
+    <div class="box-title">💡 /init 으로 자동 생성</div>
+    <p>대화창에서 <code>/init</code>을 실행하면 Claude가 코드베이스를 분석해서 CLAUDE.md를 자동으로 만들어준다. 이미 있으면 개선 사항을 제안한다.</p>
+  </div>
+
+  <h3>CLAUDE.md 예시</h3>
+  <div class="cb"><div class="cb-lbl">./CLAUDE.md</div>
+    <pre># 팀 규칙
+
+## 언어
+- 모든 답변은 한국어로
+- 기술 용어·에러메시지는 영어 그대로
+
+## 코딩 스타일
+- 들여쓰기: 2칸 공백
+- 변수명: camelCase
+- 세미콜론 사용 (TypeScript)
+
+## 금지 사항
+- API 키 하드코딩 절대 금지 (.env 파일 사용)
+- main 브랜치 직접 커밋 금지
+
+## 커밋 규칙
+형식: type(scope): 설명
+예: feat(auth): 소셜 로그인 추가</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>.claude/rules/ — 규칙 분리 관리</h3>
+  <p>프로젝트가 커지면 <code>.claude/rules/</code> 폴더에 주제별로 나눠서 관리한다.</p>
+  <div class="cb"><pre>.claude/
+└── rules/
+    ├── code-style.md    # 코딩 스타일 규칙
+    ├── security.md      # 보안 규칙
+    └── testing.md       # 테스트 규칙</pre></div>
+
+  <h4>경로별 규칙 (특정 폴더에만 적용)</h4>
+  <div class="cb"><div class="cb-lbl">.claude/rules/frontend.md</div>
+    <pre>---
+paths:
+  - "src/components/**"
+  - "src/pages/**"
+---
+
+# 프론트엔드 규칙
+- React 함수 컴포넌트만 사용
+- Props는 TypeScript interface로 정의
+- CSS-in-JS 대신 Tailwind 사용</pre>
+    <button class="cp">복사</button></div>
+
+  <h4>@import로 파일 불러오기</h4>
+  <div class="cb"><div class="cb-lbl">CLAUDE.md</div>
+    <pre>@README              # README 파일을 컨텍스트로 포함
+@package.json        # 패키지 정보 포함
+
+# 추가 규칙
+@.claude/rules/code-style.md</pre>
+    <button class="cp">복사</button></div>
+
+  <div class="box box-warn">
+    <div class="box-title">⚠️ CLAUDE.md 작성 팁</div>
+    <p>파일당 <strong>200줄 이내</strong>를 권장한다. 길수록 Claude가 중요 규칙을 놓칠 수 있다. HTML 주석(<code>&lt;!-- --&gt;</code>)은 자동 제거되어 무시된다. 규칙은 검증 가능하게 구체적으로 써야 효과가 있다. ("코드를 잘 포맷합니다" ❌ → "2칸 들여쓰기 사용" ✅)</p>
+  </div>
+</section>
+
+<!-- S06: Auto-Memory -->
+<section class="section" id="s06">
+  <div class="sec-hdr">
+    <span class="sec-num">06</span>
+    <h2>Auto-Memory — 세션을 넘는 기억</h2>
+    <span class="badge badge-new">NEW v2.1.59+</span>
+    <button class="done-btn" data-sid="s06">완료 표시</button>
+  </div>
+
+  <p>Claude Code v2.1.59부터 추가된 기능이다. Claude가 대화하면서 <strong>스스로 기억할 것을 판단하고 저장</strong>한다. 다음 세션에서도 이전 맥락이 자동으로 이어진다.</p>
+
+  <div class="box box-new">
+    <div class="box-title">✦ Auto-Memory vs CLAUDE.md 차이</div>
+    <div class="tw" style="margin:.5rem 0 0"><table>
+      <tr><th></th><th>CLAUDE.md</th><th>Auto-Memory</th></tr>
+      <tr><td><strong>작성자</strong></td><td>사용자</td><td>Claude 자동 저장</td></tr>
+      <tr><td><strong>내용</strong></td><td>지침 &amp; 규칙</td><td>학습 &amp; 패턴</td></tr>
+      <tr><td><strong>예시</strong></td><td>코딩 표준, 금지 사항</td><td>빌드 명령, 디버깅 인사이트</td></tr>
+    </table></div>
+  </div>
+
+  <h3>메모리 파일 위치</h3>
+  <div class="cb"><pre>~/.claude/projects/&lt;프로젝트경로&gt;/memory/
+├── MEMORY.md        # 인덱스 (모든 세션에 처음 200줄 로드)
+├── debugging.md     # 디버깅 패턴 (필요시 로드)
+└── api-conventions.md  # API 설계 결정 (필요시 로드)</pre></div>
+  <p><code>MEMORY.md</code>의 처음 200줄 또는 25KB가 세션 시작 시 자동 로드된다. 상세 내용은 별도 주제 파일에 저장된다.</p>
+
+  <h3>메모리 관리</h3>
+  <div class="cb"><div class="cb-lbl">대화 또는 명령어</div>
+    <pre>/memory                          # 메모리 파일 보기 · 편집
+> 이 프로젝트는 Python 3.11을 쓴다고 기억해줘
+> pnpm이 아닌 npm을 쓴다고 기억해줘
+> 내 이름은 재연이야, 기억해줘</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>비활성화 방법</h3>
+  <div class="cb"><pre># settings.json에서
+{
+  "autoMemoryEnabled": false
+}
+
+# 환경 변수로
+CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>저장 위치 변경</h3>
+  <div class="cb"><div class="cb-lbl">~/.claude/settings.json</div>
+    <pre>{
+  "autoMemoryDirectory": "~/my-memory-dir"
+}</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S07: Skills -->
+<section class="section" id="s07">
+  <div class="sec-hdr">
+    <span class="sec-num">07</span>
+    <h2>Skills — 자동 호출되는 나만의 명령</h2>
+    <span class="badge badge-hot">핵심 기능</span>
+    <button class="done-btn" data-sid="s07">완료 표시</button>
+  </div>
+
+  <p>스킬(Skills)은 <strong>내가 만드는 커스텀 명령</strong>이다. <code>description</code>을 읽고 Claude가 상황에 맞게 <strong>자동으로 호출</strong>한다. <code>/스킬명</code>으로 직접 부르는 것도 가능하다.</p>
+
+  <div class="box box-new">
+    <div class="box-title">✦ 달라진 점</div>
+    <p>기존 <code>.claude/commands/</code> 파일 방식도 여전히 작동하지만, <strong>Skills 방식</strong>이 권장된다. 자동 호출, 지원 파일, YAML frontmatter로 더 강력하게 사용할 수 있다.</p>
+  </div>
+
+  <h3>스킬 위치</h3>
+  <div class="tw"><table>
+    <tr><th>위치</th><th>적용 범위</th></tr>
+    <tr><td><code>~/.claude/skills/&lt;이름&gt;/SKILL.md</code></td><td>내 모든 프로젝트</td></tr>
+    <tr><td><code>.claude/skills/&lt;이름&gt;/SKILL.md</code></td><td>해당 프로젝트만</td></tr>
+  </table></div>
+
+  <h3>첫 번째 스킬 만들기</h3>
+  <div class="cb"><div class="cb-lbl">터미널</div>
+    <pre>mkdir -p ~/.claude/skills/daily-summary</pre>
+    <button class="cp">복사</button></div>
+  <div class="cb"><div class="cb-lbl">~/.claude/skills/daily-summary/SKILL.md</div>
+    <pre>---
+description: 오늘 작업한 내용을 요약할 때. "오늘 뭐 했어", "daily summary", "작업 요약" 등에 자동 호출.
+---
+
+# 일일 작업 요약
+
+git log --since="today 00:00" --oneline 으로 오늘 커밋을 조회하고,
+다음 형식으로 보고서를 작성한다:
+
+## 일일 보고서 (오늘 날짜)
+### 완료한 작업
+### 이슈 / 블로커
+### 내일 할 일</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>YAML Frontmatter 주요 필드</h3>
+  <div class="tw"><table>
+    <tr><th>필드</th><th>설명</th></tr>
+    <tr><td><code>name</code></td><td>스킬 이름 (생략 시 디렉토리명 사용)</td></tr>
+    <tr><td><code>description</code></td><td>자동 호출 판단 기준. 구체적일수록 정확함 <strong>(권장)</strong></td></tr>
+    <tr><td><code>when_to_use</code></td><td>description에 추가되는 트리거 상황 설명</td></tr>
+    <tr><td><code>disable-model-invocation</code></td><td><code>true</code> → 자동 호출 차단, 수동 <code>/스킬명</code>만 가능</td></tr>
+    <tr><td><code>user-invocable</code></td><td><code>false</code> → <code>/</code> 메뉴에서 숨김 (Claude만 호출 가능)</td></tr>
+    <tr><td><code>allowed-tools</code></td><td>승인 없이 사용할 수 있는 도구 목록</td></tr>
+    <tr><td><code>context</code></td><td><code>fork</code> → 격리된 subagent에서 실행</td></tr>
+    <tr><td><code>argument-hint</code></td><td>자동완성 시 표시되는 인수 힌트 (예: <code>[파일명]</code>)</td></tr>
+    <tr><td><code>paths</code></td><td>특정 파일 패턴에서만 자동 활성화</td></tr>
+  </table></div>
+
+  <h3>인수 전달 &amp; 동적 컨텍스트</h3>
+  <div class="cb"><div class="cb-lbl">인수 예시 — /fix-issue 123</div>
+    <pre>---
+name: fix-issue
+description: GitHub 이슈 번호로 버그 수정
+disable-model-invocation: true
+---
+
+GitHub 이슈 $ARGUMENTS 를 우리 코딩 표준에 맞게 수정한다.
+
+1. 이슈 내용 읽기
+2. 원인 파악
+3. 수정 구현
+4. 테스트 작성
+5. 커밋 생성</pre>
+    <button class="cp">복사</button></div>
+
+  <div class="cb"><div class="cb-lbl">동적 컨텍스트 주입 — !`명령어`</div>
+    <pre>---
+description: 현재 변경사항 요약 및 위험 요소 표시
+---
+
+## 현재 변경사항
+
+!`git diff HEAD`
+
+## 지시사항
+
+위 변경사항을 2~3 bullet로 요약하고,
+누락된 에러 처리, 하드코딩 값, 업데이트가 필요한 테스트 등 위험 요소를 나열하라.</pre>
+    <button class="cp">복사</button></div>
+  <p style="font-size:.83rem;color:var(--text2)">`` !`명령어` `` 는 Claude가 보기 전에 미리 실행되어 출력으로 대체된다.</p>
+
+  <div class="box box-tip">
+    <div class="box-title">💡 description 잘 쓰는 법</div>
+    <p>description은 Claude가 "언제 쓸지" 판단하는 유일한 단서다. 트리거 단어를 구체적으로 열거하면 정확도가 높아진다.<br>
+    좋은 예: <em>"사용자가 '배포', 'deploy', '서버에 올려' 등을 말할 때"</em><br>
+    나쁜 예: <em>"코드 관련 작업"</em> (너무 광범위)</p>
+  </div>
+</section>
+
+<!-- S08: Hooks -->
+<section class="section" id="s08">
+  <div class="sec-hdr">
+    <span class="sec-num">08</span>
+    <h2>Hooks — 이벤트 자동화</h2>
+    <button class="done-btn" data-sid="s08">완료 표시</button>
+  </div>
+
+  <p>훅(Hooks)은 <strong>특정 이벤트 발생 시 자동 실행되는 스크립트</strong>다. 파일 수정 시 lint 자동 실행, Claude 명령 차단, Slack 알림 전송 등 강력한 자동화가 가능하다.</p>
+
+  <h3>주요 이벤트</h3>
+  <div class="tw"><table>
+    <tr><th>이벤트</th><th>언제</th></tr>
+    <tr><td><code>PreToolUse</code></td><td>도구(파일 수정, 명령 실행 등) 실행 직전 — 차단 가능</td></tr>
+    <tr><td><code>PostToolUse</code></td><td>도구 실행 직후</td></tr>
+    <tr><td><code>UserPromptSubmit</code></td><td>내가 메시지를 전송할 때</td></tr>
+    <tr><td><code>SessionStart</code></td><td>세션 시작 시</td></tr>
+    <tr><td><code>SessionEnd</code></td><td>세션 종료 시</td></tr>
+    <tr><td><code>FileChanged</code></td><td>감시 파일이 변경될 때</td></tr>
+    <tr><td><code>CwdChanged</code></td><td>작업 디렉토리가 변경될 때</td></tr>
+    <tr><td><code>ConfigChange</code></td><td>설정 파일 변경 시</td></tr>
+    <tr><td><code>PermissionRequest</code></td><td>Claude가 권한을 요청할 때</td></tr>
+    <tr><td><code>Stop</code></td><td>Claude 응답 완료 시</td></tr>
+    <tr><td><code>InstructionsLoaded</code></td><td>CLAUDE.md 또는 규칙 파일 로드 시</td></tr>
+    <tr><td><code>PreCompact / PostCompact</code></td><td>컨텍스트 압축 전/후</td></tr>
+  </table></div>
+
+  <h3>훅 타입 5가지</h3>
+  <div class="tw"><table>
+    <tr><th>타입</th><th>설명</th></tr>
+    <tr><td><code>command</code></td><td>셸 명령어 실행 (기본)</td></tr>
+    <tr><td><code>http</code></td><td>HTTP POST 요청 전송 (웹훅, Slack 등)</td></tr>
+    <tr><td><code>mcp_tool</code></td><td>MCP 서버 도구 호출</td></tr>
+    <tr><td><code>prompt</code></td><td>LLM 프롬프트로 판단</td></tr>
+    <tr><td><code>agent</code></td><td>다른 Claude 에이전트 호출</td></tr>
+  </table></div>
+
+  <h3>설정 방법 — /hooks 메뉴</h3>
+  <p>대화창에서 <code>/hooks</code>를 입력하면 그래픽 설정 메뉴가 열린다. 코드를 직접 안 써도 된다.</p>
+
+  <h3>설정 파일로 직접 작성</h3>
+  <div class="cb"><div class="cb-lbl">.claude/settings.json</div>
+    <pre>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx",
+            "args": ["eslint", "${tool_input.file_path}", "--fix"],
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "if": "Bash(rm -rf *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo",
+            "args": ["rm -rf 명령은 차단됩니다"],
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+    <button class="cp">복사</button></div>
+
+  <div class="box box-warn">
+    <div class="box-title">⚠️ 주의</div>
+    <p>훅은 강력하지만 잘못 설정하면 무한 루프나 의도치 않은 동작을 유발할 수 있다. 처음엔 <code>echo</code>나 로그 기록 같은 안전한 명령부터 시작하자.</p>
+  </div>
+</section>
+
+<!-- S09: MCP -->
+<section class="section" id="s09">
+  <div class="sec-hdr">
+    <span class="sec-num">09</span>
+    <h2>MCP 서버 — 능력 확장</h2>
+    <button class="done-btn" data-sid="s09">완료 표시</button>
+  </div>
+
+  <p>MCP(Model Context Protocol)는 Claude에게 <strong>외부 도구를 연결하는 표준 방식</strong>이다. MCP 서버를 추가하면 Claude가 데이터베이스 조회, 웹 검색, Slack 메시지 전송, GitHub 조작 등을 직접 할 수 있다.</p>
+
+  <h3>MCP 추가 — /mcp 메뉴</h3>
+  <div class="cb"><pre>/mcp    # 대화창에서 입력 → 서버 검색 및 추가 메뉴</pre></div>
+
+  <h3>설정 파일로 직접 추가</h3>
+  <div class="cb"><div class="cb-lbl">~/.claude/settings.json</div>
+    <pre>{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/나/Documents"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_TOKEN": "ghp_xxxx" }
+    }
+  }
+}</pre>
+    <button class="cp">복사</button></div>
+
+  <div class="box box-warn">
+    <div class="box-title">⚠️ 보안</div>
+    <p>MCP 서버는 외부 코드를 실행한다. 신뢰할 수 있는 출처의 서버만 추가하고, <code>GITHUB_TOKEN</code> 같은 민감 정보는 환경 변수로 관리한다.</p>
+  </div>
+
+  <h3>인기 MCP 서버</h3>
+  <div class="tw"><table>
+    <tr><th>서버</th><th>기능</th></tr>
+    <tr><td><code>@modelcontextprotocol/server-filesystem</code></td><td>지정 폴더 파일 접근</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-github</code></td><td>GitHub 이슈, PR, 코드 조작</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-postgres</code></td><td>PostgreSQL 쿼리</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-brave-search</code></td><td>웹 검색</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-slack</code></td><td>Slack 메시지 전송/조회</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-google-drive</code></td><td>Google Drive 파일 접근</td></tr>
+  </table></div>
+</section>
+
+<!-- S10: 비용 -->
+<section class="section" id="s10">
+  <div class="sec-hdr">
+    <span class="sec-num">10</span>
+    <h2>비용 &amp; 플랜</h2>
+    <button class="done-btn" data-sid="s10">완료 표시</button>
+  </div>
+
+  <div class="tw"><table>
+    <tr><th>플랜</th><th>가격</th><th>특징</th></tr>
+    <tr><td><strong>무료</strong></td><td>$0</td><td>Claude Code 미지원</td></tr>
+    <tr><td><strong>Pro</strong></td><td>$20/월</td><td>Claude Code 포함, 일반 사용량에 적합</td></tr>
+    <tr><td><strong>Max 5x</strong></td><td>$100/월</td><td>Pro 대비 5배 사용량</td></tr>
+    <tr><td><strong>Max 20x</strong></td><td>$200/월</td><td>Pro 대비 20배, 헤비 유저</td></tr>
+    <tr><td><strong>API</strong></td><td>토큰 단위</td><td>사용한 만큼만 지불</td></tr>
+  </table></div>
+
+  <div class="box box-info">
+    <div class="box-title">ℹ️ 현재 사용량 확인</div>
+    <p>대화창에서 <code>/usage</code> 또는 <code>/cost</code>를 입력하면 현재 세션 비용과 사용량을 볼 수 있다.</p>
+  </div>
+
+  <h3>한도 절약 팁</h3>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb-body"><div class="st">/compact 사용</div><div class="sd">대화가 길어지면 <code>/compact</code>로 압축. 컨텍스트 절약 = 비용 절약.</div></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb-body"><div class="st">기능 단위로 /clear</div><div class="sd">기능 하나 완료 후 <code>/clear</code>로 초기화하고 새로 시작.</div></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb-body"><div class="st">.claudeignore 활용</div><div class="sd">node_modules, build 폴더 같은 대용량 폴더 제외.</div></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb-body"><div class="st">--effort 조절</div><div class="sd">간단한 작업은 <code>--effort low</code>. 복잡한 작업만 <code>high</code>.</div></div></div>
+  </div>
+
+  <div class="cb"><div class="cb-lbl">.claudeignore 예시</div>
+    <pre>node_modules/
+.git/
+dist/
+build/
+*.log
+*.lock
+__pycache__/
+.env</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S11: 플랫폼 -->
+<section class="section" id="s11">
+  <div class="sec-hdr">
+    <span class="sec-num">11</span>
+    <h2>플랫폼 &amp; IDE 통합</h2>
+    <span class="badge badge-new">확장됨</span>
+    <button class="done-btn" data-sid="s11">완료 표시</button>
+  </div>
+
+  <p>Claude Code는 다양한 환경에서 사용할 수 있다. <strong>처음 시작한다면 데스크탑 앱이 가장 편하다.</strong></p>
+
+  <div class="tw"><table>
+    <tr><th>플랫폼</th><th>특징</th><th>추천 대상</th></tr>
+    <tr><td><strong>데스크탑 앱</strong> ⭐</td><td>GUI, 폴더 드래그, 이미지 붙여넣기, 시스템 알림, 전역 단축키, Remote Control</td><td>초보자 · 일반 사용자</td></tr>
+    <tr><td><strong>VS Code 확장</strong></td><td>인라인 diff, @-멘션, 계획 검토, 코드 선택 → 우클릭 Ask Claude</td><td>코드 에디터 사용자</td></tr>
+    <tr><td><strong>Terminal CLI</strong></td><td>모든 기능 사용 가능, 파이프·스크립트 자동화</td><td>개발자 · 자동화</td></tr>
+    <tr><td><strong>Web (claude.ai/code)</strong></td><td>설치 불필요, 오래 실행되는 작업에 적합</td><td>빠른 시작 · 공용 PC</td></tr>
+    <tr><td><strong>JetBrains IDEs</strong></td><td>IntelliJ, PyCharm, WebStorm 등</td><td>Java/Kotlin/Python 개발자</td></tr>
+    <tr><td><strong>Chrome Extension</strong></td><td>라이브 웹앱 디버깅</td><td>프론트엔드 개발자</td></tr>
+    <tr><td><strong>Slack 앱</strong></td><td>Slack에서 직접 작업 요청</td><td>팀 협업</td></tr>
+  </table></div>
+
+  <h3>데스크탑 앱 주요 기능</h3>
+  <div class="grid">
+    <div class="card"><div class="card-ico">📂</div><div class="card-t">폴더 드래그</div><div class="card-d">작업 폴더를 앱 창으로 끌어다 놓기만 하면 됨</div></div>
+    <div class="card"><div class="card-ico">🖼️</div><div class="card-t">이미지 붙여넣기</div><div class="card-d">스크린샷을 Ctrl+V로 바로 전달</div></div>
+    <div class="card"><div class="card-ico">🔔</div><div class="card-t">시스템 알림</div><div class="card-d">작업 완료 시 OS 알림 수신</div></div>
+    <div class="card"><div class="card-ico">📱</div><div class="card-t">Remote Control</div><div class="card-d">다른 기기(폰 등)에서 세션 이어받기</div></div>
+  </div>
+
+  <h3>VS Code 확장 설치</h3>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb-body"><div class="st">Extensions 패널 열기</div><div class="sd"><code>Ctrl+Shift+X</code> (Mac: <code>Cmd+Shift+X</code>)</div></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb-body"><div class="st">"Claude Code" 검색 후 Install</div><div class="sd">Anthropic 공식 확장 설치</div></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb-body"><div class="st">사이드바 Claude 아이콘 클릭</div><div class="sd">로그인 후 에디터 안에서 바로 대화 가능</div></div></div>
+  </div>
+
+  <h3>데스크탑 앱</h3>
+  <div class="cb"><pre># 터미널에서 데스크탑 앱으로 전환
+/desktop    # 또는 /app</pre></div>
+  <p>또는 <a href="https://claude.ai/download">claude.ai/download</a>에서 직접 다운로드.</p>
+
+  <h3>Slack 앱 설치</h3>
+  <div class="cb"><pre>/install-slack-app    # 대화창에서 실행</pre></div>
+
+  <h3>Remote Control — 다른 기기에서 접속</h3>
+  <div class="cb"><pre>/remote-control    # 현재 세션을 claude.ai에서 원격 제어
+/teleport         # 웹 세션을 터미널로 가져오기</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S12: GitHub -->
+<section class="section" id="s12">
+  <div class="sec-hdr">
+    <span class="sec-num">12</span>
+    <h2>GitHub 연동</h2>
+    <button class="done-btn" data-sid="s12">완료 표시</button>
+  </div>
+
+  <h3>기본 Git 작업 (MCP 없이)</h3>
+  <div class="cb"><div class="cb-lbl">대화 예시</div>
+    <pre>> 지금까지 변경한 파일들을 커밋해줘
+> "로그인 기능 추가" 라는 메시지로 커밋해줘
+> feature/login 브랜치를 만들고 전환해줘
+> main 브랜치에 푸시해줘</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>GitHub Actions 설치</h3>
+  <div class="cb"><pre>/install-github-app    # Claude GitHub Actions 앱 설정</pre></div>
+
+  <h3>PR 리뷰 자동화</h3>
+  <div class="cb"><div class="cb-lbl">대화 예시 (GitHub MCP 연결 후)</div>
+    <pre>> 오픈 이슈 목록 보여줘
+> 이 PR의 변경사항을 요약해줘
+> 이슈 #42에 해결 방법 댓글 달아줘
+> PR을 만들어줘 (제목: 로그인 기능 추가)</pre>
+    <button class="cp">복사</button></div>
+
+  <div class="box box-warn">
+    <div class="box-title">⚠️ main 브랜치 보호</div>
+    <p>Claude에게 "main에 직접 푸시해줘"라고 하면 실행된다. <code>CLAUDE.md</code>에 "main 브랜치 직접 커밋/푸시 금지, PR 필수"를 명시해두는 게 좋다.</p>
+  </div>
+</section>
+
+<!-- S13: 트러블슈팅 -->
+<section class="section" id="s13">
+  <div class="sec-hdr">
+    <span class="sec-num">13</span>
+    <h2>트러블슈팅</h2>
+    <button class="done-btn" data-sid="s13">완료 표시</button>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">"command not found: claude" 오류<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <div class="cb"><pre># 재설치
+curl -fsSL https://claude.ai/install.sh | bash
+
+# 설치 후 터미널 재시작, 그래도 안 되면:
+source ~/.bashrc   # 또는 source ~/.zshrc
+
+# 진단 실행
+claude doctor</pre><button class="cp">복사</button></div>
+    </div></div>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">로그인 / 인증 오류<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <div class="cb"><pre>claude auth logout
+claude auth login</pre><button class="cp">복사</button></div>
+      <p>그래도 안 되면 <code>~/.claude/</code> 폴더와 <code>~/.claude.json</code>을 삭제 후 재시작한다.</p>
+    </div></div>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">응답이 중간에 잘리거나 느림<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p><code>/compact</code>로 대화를 압축하거나 <code>/clear</code> 후 재시작한다. 컨텍스트가 너무 길면 속도가 느려지고 응답이 잘릴 수 있다.</p>
+    </div></div>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">한도 초과 (rate limit) 오류<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p>오류 메시지에 표시된 시간만큼 기다리거나 Max 플랜으로 업그레이드한다. 또는 <code>/upgrade</code>로 플랜 변경 페이지로 이동할 수 있다.</p>
+    </div></div>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">CLAUDE.md 규칙이 적용되지 않음<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p><code>/memory</code>를 실행해서 파일이 로드되었는지 확인한다. 규칙이 너무 모호하면 Claude가 따르지 않을 수 있다. 더 구체적으로 ("2칸 들여쓰기 사용") 작성하고, 충돌하는 규칙이 없는지 확인한다.</p>
+    </div></div>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">스킬이 자동 호출되지 않음<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p><code>description</code> 필드를 더 구체적으로 작성한다. <code>disable-model-invocation: true</code>가 설정되어 있으면 자동 호출이 비활성화된 상태다. <code>/skills</code>로 스킬이 인식되는지 확인한다.</p>
+    </div></div>
+  </div>
+
+  <div class="faq">
+    <button class="faq-q">파일을 계속 엉뚱하게 수정함<span class="fa">▼</span></button>
+    <div class="faq-a"><div class="faq-inner">
+      <p><code>pwd</code>로 현재 위치를 확인하고 올바른 폴더에서 <code>claude</code>를 실행했는지 확인한다. <code>claude doctor</code>로 전반적인 설정 상태도 점검한다.</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- S14: 팁 -->
+<section class="section" id="s14">
+  <div class="sec-hdr">
+    <span class="sec-num">14</span>
+    <h2>팁 &amp; 실전 패턴</h2>
+    <button class="done-btn" data-sid="s14">완료 표시</button>
+  </div>
+
+  <h3>이미지 / 스크린샷 전달</h3>
+  <p>데스크탑 앱에서는 클립보드 이미지를 <code>Ctrl+V</code>로 바로 붙여넣을 수 있다. 에러 화면, 디자인 시안, UI 버그를 그대로 전달하면 된다.</p>
+  <div class="cb"><pre>> [스크린샷 Ctrl+V] 이 에러 메시지 해결해줘
+> [UI 디자인 이미지] 이 레이아웃을 HTML로 만들어줘
+> [버그 화면] 왜 이렇게 보이는지 원인 찾아줘</pre></div>
+
+  <h3>터미널에서 파이프로 Claude 실행 (CLI 전용)</h3>
+  <div class="cb"><pre># 파일 내용을 Claude에게 보내기
+cat error.log | claude -p "이 에러 원인 알려줘"
+
+# 결과를 파일로 저장
+claude -p "README 초안 작성" > README.md
+
+# git diff 리뷰
+git diff main | claude -p "이 변경사항에서 버그를 찾아줘"</pre>
+    <button class="cp">복사</button></div>
+  <div class="cb"><pre>> [스크린샷 붙여넣기] 이 에러 메시지 해결해줘
+> [UI 디자인 이미지] 이 레이아웃을 HTML로 만들어줘</pre></div>
+
+  <h3>@파일 참조로 컨텍스트 지정</h3>
+  <div class="cb"><pre>> @src/api/auth.js 이 파일에 JWT 갱신 로직을 추가해줘
+> @src/components/ 이 폴더의 모든 컴포넌트에 PropTypes를 추가해줘</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>Plan 모드 — 실행 전 계획 확인</h3>
+  <p>복잡한 작업을 하기 전에 먼저 계획을 보고 싶을 때:</p>
+  <div class="cb"><pre>claude --permission-mode plan   # Plan 모드로 시작
+/plan                           # 대화 중 Plan 모드 전환</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>백그라운드 에이전트</h3>
+  <div class="cb"><pre>claude --bg "이슈 조사하고 수정 방법 찾아줘"   # 백그라운드 실행
+/background "오류 로그 분석해줘"              # 대화 중 분리
+/tasks                                        # 백그라운드 작업 목록</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>병렬 작업 — /batch</h3>
+  <div class="cb"><pre>> /batch 이 코드베이스의 모든 컴포넌트에 TypeScript를 추가해줘</pre>
+    <button class="cp">복사</button></div>
+  <p style="font-size:.83rem;color:var(--text2)">대규모 변경을 5~30개 단위로 분해해 병렬 worktree에서 동시 실행한다.</p>
+
+  <h3>세션 인수인계 패턴</h3>
+  <div class="cb"><pre>> 오늘 작업한 내용, 완료된 것, 다음에 할 것을 handoff.md에 정리해줘</pre>
+    <button class="cp">복사</button></div>
+  <p style="font-size:.83rem;color:var(--text2)">다음 세션 시작 시 <code>handoff.md</code>를 읽으면 맥락을 빠르게 회복할 수 있다.</p>
+
+  <h3>/loop — 주기적 작업</h3>
+  <div class="cb"><pre>/loop 5m "배포가 끝났는지 확인하고 완료되면 알려줘"
+/loop "프로젝트 진행 상황을 주기적으로 체크해줘"</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S15: 비개발자 -->
+<section class="section" id="s15">
+  <div class="sec-hdr">
+    <span class="sec-num">15</span>
+    <h2>비개발자 활용법</h2>
+    <button class="done-btn" data-sid="s15">완료 표시</button>
+  </div>
+
+  <p>Claude Code는 코드 작성 외에도 <strong>파일 정리, 문서 처리, 데이터 변환</strong> 등 일반 업무에도 강력하다.</p>
+
+  <div class="grid">
+    <div class="card"><div class="card-ico">📁</div><div class="card-t">파일 정리</div><div class="card-d">날짜/종류별 자동 분류, 이름 변경</div></div>
+    <div class="card"><div class="card-ico">📊</div><div class="card-t">CSV/엑셀</div><div class="card-d">데이터 변환, 필터링, 집계</div></div>
+    <div class="card"><div class="card-ico">📝</div><div class="card-t">문서 작업</div><div class="card-d">여러 문서 합치기, 요약, 번역</div></div>
+    <div class="card"><div class="card-ico">🌐</div><div class="card-t">웹페이지</div><div class="card-d">코딩 없이 HTML 페이지 제작</div></div>
+    <div class="card"><div class="card-ico">🔄</div><div class="card-t">형식 변환</div><div class="card-d">JSON↔CSV, XML, Markdown 등</div></div>
+    <div class="card"><div class="card-ico">📧</div><div class="card-t">문서 초안</div><div class="card-d">이메일, 제안서, 보고서 작성</div></div>
+  </div>
+
+  <h3>실제 예시</h3>
+  <div class="cb"><div class="cb-lbl">파일 정리</div>
+    <pre>> Downloads 폴더의 파일들을 연도/월 폴더로 정리해줘
+> 파일명에 날짜가 있으면 그 날짜 기준으로, 없으면 수정 날짜 기준으로</pre>
+    <button class="cp">복사</button></div>
+  <div class="cb"><div class="cb-lbl">CSV 처리</div>
+    <pre>> sales.csv에서 2025년 1분기 데이터만 추출해서 q1_2025.csv로 저장해줘
+> 각 제품별 총 판매금액 합계도 summary.txt로 만들어줘</pre>
+    <button class="cp">복사</button></div>
+  <div class="cb"><div class="cb-lbl">웹페이지 제작</div>
+    <pre>> 내 이력서를 보여주는 예쁜 웹페이지를 만들어줘
+> 다크 모드 지원하고, 모바일에서도 잘 보이게 해줘</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+<!-- S16: 팀 협업 -->
+<section class="section" id="s16">
+  <div class="sec-hdr">
+    <span class="sec-num">16</span>
+    <h2>팀 협업</h2>
+    <button class="done-btn" data-sid="s16">완료 표시</button>
+  </div>
+
+  <h3>팀 공용 CLAUDE.md</h3>
+  <p>프로젝트 루트의 <code>CLAUDE.md</code>를 Git에 커밋하면 팀원 모두가 같은 규칙으로 Claude를 사용한다.</p>
+
+  <div class="box box-tip">
+    <div class="box-title">💡 개인 규칙 + 팀 규칙 분리</div>
+    <p><code>~/.claude/CLAUDE.md</code>에 개인 취향(응답 언어, 설명 방식 등)을 넣고, 팀 공용 규칙은 프로젝트 <code>CLAUDE.md</code>에 넣는다. 두 파일은 자동으로 합쳐진다.</p>
+  </div>
+
+  <h3>팀 공용 스킬</h3>
+  <p><code>.claude/skills/</code>를 Git에 커밋하면 팀 전체가 같은 스킬을 사용할 수 있다.</p>
+  <div class="cb"><pre>.claude/
+├── CLAUDE.md            # 팀 규칙 (Git 커밋)
+└── skills/
+    ├── deploy/SKILL.md  # 팀 배포 스킬 (Git 커밋)
+    └── review/SKILL.md  # 팀 코드리뷰 스킬 (Git 커밋)</pre></div>
+
+  <h3>팀 온보딩</h3>
+  <div class="cb"><pre>/team-onboarding    # 새 팀원을 위한 온보딩 가이드 자동 생성</pre></div>
+</section>
+
+<!-- S17: 고급 자동화 -->
+<section class="section" id="s17">
+  <div class="sec-hdr">
+    <span class="sec-num">17</span>
+    <h2>고급 자동화</h2>
+    <button class="done-btn" data-sid="s17">완료 표시</button>
+  </div>
+
+  <h3>Claude Code SDK — 프로그램에서 호출</h3>
+  <div class="cb"><div class="cb-lbl">Python SDK</div>
+    <pre>import anthropic
+
+client = anthropic.Anthropic()
+
+with open("report.txt") as f:
+    content = f.read()
+
+response = client.messages.create(
+    model="claude-opus-4-7",
+    max_tokens=1024,
+    messages=[{
+        "role": "user",
+        "content": f"다음 보고서를 3줄로 요약해줘:\n\n{content}"
+    }]
+)
+print(response.content[0].text)</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>CI/CD 파이프라인 연동</h3>
+  <div class="cb"><div class="cb-lbl">.github/workflows/claude-review.yml</div>
+    <pre>name: Claude Code Review
+on: [pull_request]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Claude 코드 리뷰
+        run: |
+          git diff origin/main...HEAD > changes.diff
+          cat changes.diff | claude -p "이 변경사항에서 버그나 보안 이슈를 찾아줘"</pre>
+    <button class="cp">복사</button></div>
+
+  <h3>Routines — 클라우드 스케줄 자동화</h3>
+  <div class="cb"><pre>/schedule 매일 오전 9시에 어제 git 커밋 내용으로 일일 보고서 만들어줘
+/routines    # Routines 목록 보기</pre>
+    <button class="cp">복사</button></div>
+  <p style="font-size:.83rem;color:var(--text2)">Anthropic 관리 클라우드에서 실행되므로 내 컴퓨터가 꺼져 있어도 동작한다.</p>
+
+  <h3>권장 프로젝트 구조</h3>
+  <div class="cb"><pre>내프로젝트/
+├── CLAUDE.md              # 프로젝트 규칙 (Git 커밋)
+├── CLAUDE.local.md        # 개인 규칙 (.gitignore 추가)
+├── handoff.md             # 세션 인수인계
+├── .claude/
+│   ├── rules/             # 세부 규칙 파일들
+│   │   ├── coding.md
+│   │   └── security.md
+│   └── skills/            # 커스텀 스킬들
+│       ├── deploy/SKILL.md
+│       └── review/SKILL.md
+└── src/                   # 실제 코드</pre>
+    <button class="cp">복사</button></div>
+</section>
+
+</div>
+</main>
+
+<button id="btt" title="맨 위로">↑</button>
+
+<script>
+const SECTIONS=[
+  {id:'s00',num:'00',title:'시작 전 핵심 질문'},
+  {id:'s01',num:'01',title:'설치 방법'},
+  {id:'s02',num:'02',title:'로그인 & 인증'},
+  {id:'s03',num:'03',title:'첫 번째 세션'},
+  {id:'s04',num:'04',title:'슬래시 명령어 & CLI'},
+  {id:'s05',num:'05',title:'CLAUDE.md 규칙 파일'},
+  {id:'s06',num:'06',title:'Auto-Memory'},
+  {id:'s07',num:'07',title:'Skills 자동 호출'},
+  {id:'s08',num:'08',title:'Hooks 자동화'},
+  {id:'s09',num:'09',title:'MCP 서버'},
+  {id:'s10',num:'10',title:'비용 & 플랜'},
+  {id:'s11',num:'11',title:'플랫폼 & IDE 통합'},
+  {id:'s12',num:'12',title:'GitHub 연동'},
+  {id:'s13',num:'13',title:'트러블슈팅'},
+  {id:'s14',num:'14',title:'팁 & 실전 패턴'},
+  {id:'s15',num:'15',title:'비개발자 활용법'},
+  {id:'s16',num:'16',title:'팀 협업'},
+  {id:'s17',num:'17',title:'고급 자동화'},
+];
+
+// sidebar
+const sidebar=document.getElementById('sidebar');
+function buildSidebar(){
+  const done=JSON.parse(localStorage.getItem('ccl-done')||'{}');
+  let h='<span class="sb-label">목차</span>';
+  SECTIONS.forEach(s=>{
+    const d=done[s.id];
+    h+=`<a class="sb-link${d?' done':''}" href="#${s.id}" data-id="${s.id}"><span class="sb-num">${s.num}</span>${s.title}<span class="ck">✓</span></a>`;
+  });
+  sidebar.innerHTML=h;
+}
+buildSidebar();
+
+// progress
+function updateProgress(){
+  const done=JSON.parse(localStorage.getItem('ccl-done')||'{}');
+  const c=Object.values(done).filter(Boolean).length;
+  document.getElementById('dc').textContent=c;
+  document.getElementById('tc').textContent=SECTIONS.length;
+  buildSidebar();
+}
+updateProgress();
+
+// done buttons
+document.querySelectorAll('.done-btn').forEach(btn=>{
+  const sid=btn.dataset.sid;
+  const done=JSON.parse(localStorage.getItem('ccl-done')||'{}');
+  if(done[sid]){btn.textContent='✓ 완료';btn.classList.add('on');}
+  btn.addEventListener('click',()=>{
+    const d=JSON.parse(localStorage.getItem('ccl-done')||'{}');
+    d[sid]=!d[sid];
+    localStorage.setItem('ccl-done',JSON.stringify(d));
+    btn.textContent=d[sid]?'✓ 완료':'완료 표시';
+    btn.classList.toggle('on',!!d[sid]);
+    updateProgress();
+  });
+});
+
+// intersection observer
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+      const l=document.querySelector(`.sb-link[data-id="${e.target.id}"]`);
+      if(l){l.classList.add('active');l.scrollIntoView({block:'nearest'});}
+    }
+  });
+},{rootMargin:'-15% 0px -70% 0px'});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+// theme
+const tb=document.getElementById('theme-btn');
+const th=localStorage.getItem('ccl-theme')||'dark';
+document.documentElement.dataset.theme=th;
+tb.textContent=th==='dark'?'☀️':'🌙';
+tb.addEventListener('click',()=>{
+  const n=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=n;
+  localStorage.setItem('ccl-theme',n);
+  tb.textContent=n==='dark'?'☀️':'🌙';
+});
+
+// search
+const si=document.getElementById('search');
+const sc=document.getElementById('search-clear');
+const sb2=document.getElementById('search-result-bar');
+let st;
+function clearHL(){
+  document.querySelectorAll('mark').forEach(m=>m.replaceWith(document.createTextNode(m.textContent)));
+  document.querySelectorAll('.section').forEach(s=>s.style.display='');
+}
+function doSearch(q){
+  clearHL();
+  if(!q){sb2.style.display='none';sc.style.display='none';return;}
+  sc.style.display='block';
+  const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+  let tot=0,secs=0;
+  document.querySelectorAll('.section').forEach(sec=>{
+    let found=0;
+    function walk(node){
+      if(node.nodeType===3){
+        const m=node.textContent.match(re);
+        if(m){
+          found+=m.length;tot+=m.length;
+          const fr=document.createDocumentFragment();
+          let last=0,txt=node.textContent;
+          txt.replace(re,(match,off)=>{
+            fr.appendChild(document.createTextNode(txt.slice(last,off)));
+            const mk=document.createElement('mark');mk.textContent=match;fr.appendChild(mk);
+            last=off+match.length;
+          });
+          fr.appendChild(document.createTextNode(txt.slice(last)));
+          node.replaceWith(fr);
+        }
+      }else if(node.nodeType===1&&!['SCRIPT','STYLE','BUTTON'].includes(node.tagName)){
+        [...node.childNodes].forEach(walk);
+      }
+    }
+    walk(sec);
+    sec.style.display=found?'':'none';
+    if(found)secs++;
+  });
+  sb2.style.display='block';
+  sb2.textContent=tot?`${tot}개 발견 (${secs}섹션)`:'결과 없음';
+}
+si.addEventListener('input',e=>{clearTimeout(st);st=setTimeout(()=>doSearch(e.target.value.trim()),200);});
+sc.addEventListener('click',()=>{si.value='';doSearch('');si.focus();});
+
+// copy buttons
+document.querySelectorAll('.cp').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const pre=btn.closest('.cb').querySelector('pre');
+    navigator.clipboard.writeText(pre.textContent.trim()).then(()=>{
+      btn.textContent='✓ 복사됨';btn.classList.add('ok');
+      setTimeout(()=>{btn.textContent='복사';btn.classList.remove('ok');},1800);
+    });
+  });
+});
+
+// faq
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const a=btn.nextElementSibling;
+    const open=btn.classList.contains('open');
+    btn.classList.toggle('open',!open);
+    a.style.maxHeight=open?'0':a.scrollHeight+'px';
+  });
+});
+
+// tabs
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const g=btn.closest('.tabs');
+    g.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+    g.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
+    btn.classList.add('on');
+    const t=g.querySelector('#tab-'+btn.dataset.tab);
+    if(t)t.classList.add('on');
+  });
+});
+
+// back to top
+const btt=document.getElementById('btt');
+window.addEventListener('scroll',()=>btt.classList.toggle('on',window.scrollY>400));
+btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// mobile menu
+const mb=document.getElementById('menu-btn');
+const ov=document.getElementById('overlay');
+mb.addEventListener('click',()=>{sidebar.classList.toggle('open');ov.classList.toggle('on');});
+ov.addEventListener('click',()=>{sidebar.classList.remove('open');ov.classList.remove('on');});
+sidebar.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{sidebar.classList.remove('open');ov.classList.remove('on');}));
+</script>
+</body>
+</html>
