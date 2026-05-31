@@ -245,19 +245,19 @@ mark{background:rgba(124,106,255,.32);color:var(--text);border-radius:2px;paddin
   <div class="faq">
     <button class="faq-q">돈이 얼마나 드나요?<span class="fa">▼</span></button>
     <div class="faq-a"><div class="faq-inner">
-      <p><strong>Pro</strong> ($20/월), <strong>Max 5x</strong> ($100/월), <strong>Max 20x</strong> ($200/월) 구독 플랜이 있습니다. <strong>무료 플랜은 Claude Code를 지원하지 않습니다.</strong> API 키로 연결하면 토큰 단위 과금도 가능합니다. 처음엔 Pro로 시작하는 걸 추천합니다.</p>
+      <p><strong>Pro</strong> ($20/월), <strong>Max 5x</strong> ($100/월), <strong>Max 20x</strong> ($200/월) 구독 플랜이 있습니다. <strong>무료 플랜은 Claude Code를 지원하지 않습니다.</strong> API 키로 연결하면 사용한 글자 수(토큰) 만큼만 지불하는 방식도 가능합니다. 처음엔 Pro로 시작하는 걸 추천합니다.</p>
     </div></div>
   </div>
   <div class="faq">
     <button class="faq-q">Windows에서도 되나요?<span class="fa">▼</span></button>
     <div class="faq-a"><div class="faq-inner">
-      <p>됩니다. Windows 10 1809 이상을 지원합니다. PowerShell 한 줄, WinGet, 또는 데스크탑 앱으로 설치합니다. WSL2를 쓰면 더 안정적이지만 필수는 아닙니다.</p>
+      <p>됩니다. Windows 10 1809 이상을 지원합니다. PowerShell 한 줄, WinGet, 또는 데스크탑 앱으로 설치합니다. WSL2(Windows 안의 Linux 환경)를 쓰면 더 안정적이지만 필수는 아닙니다.</p>
     </div></div>
   </div>
   <div class="faq">
     <button class="faq-q">내 파일이 Anthropic 서버로 전송되나요?<span class="fa">▼</span></button>
     <div class="faq-a"><div class="faq-inner">
-      <p>Claude에게 명시적으로 전달한 내용(대화, 파일 내용)만 API를 통해 전송됩니다. Anthropic은 API 데이터로 모델을 학습하지 않습니다. 민감한 파일은 <code>.claudeignore</code>에 등록하면 됩니다.</p>
+      <p>Claude에게 명시적으로 전달한 내용(대화, 파일 내용)만 API를 통해 전송됩니다. Anthropic은 API 데이터로 모델을 학습하지 않습니다. 민감한 파일은 <code>.claudeignore</code> 파일에 경로를 적어두면 Claude가 읽지 않습니다.</p>
     </div></div>
   </div>
 </section>
@@ -320,7 +320,7 @@ mark{background:rgba(124,106,255,.32);color:var(--text);border-radius:2px;paddin
   <h3>방법 D — WinGet (Windows)</h3>
   <div class="cb"><pre>winget install Anthropic.ClaudeCode</pre><button class="cp">복사</button></div>
 
-  <h3>방법 E — Linux 패키지 관리자</h3>
+  <h3>방법 E — Linux 패키지 관리자 <span style="font-size:.8rem;color:var(--text3)">(고급 사용자용)</span></h3>
   <div class="tabs">
     <div class="tab-nav">
       <button class="tab-btn on" data-tab="apt">apt (Ubuntu/Debian)</button>
@@ -365,7 +365,7 @@ apk add claude-code</pre><button class="cp">복사</button></div>
     <tr><td>계정</td><td>Claude.ai Pro/Max/Team/Enterprise (무료 플랜 불가)</td></tr>
   </table></div>
 
-  <h3>설치 확인</h3>
+  <h3>설치 확인 (터미널 방식으로 설치한 경우)</h3>
   <div class="cb"><pre>claude --version   # 버전 출력되면 성공
 claude doctor      # 설치 및 설정 진단</pre><button class="cp">복사</button></div>
 
@@ -391,9 +391,9 @@ claude doctor      # 설치 및 설정 진단</pre><button class="cp">복사</bu
   <div class="tw"><table>
     <tr><th>방식</th><th>대상</th><th>설정 방법</th></tr>
     <tr><td><strong>Claude.ai 계정</strong></td><td>Pro/Max 구독자</td><td>첫 실행 시 브라우저 자동 열림</td></tr>
-    <tr><td><strong>API 키</strong></td><td>API 직접 사용 개발자</td><td>환경 변수 <code>ANTHROPIC_API_KEY</code></td></tr>
-    <tr><td><strong>Amazon Bedrock</strong></td><td>AWS 사용자</td><td><code>/setup-bedrock</code></td></tr>
-    <tr><td><strong>Google Vertex AI</strong></td><td>GCP 사용자</td><td><code>/setup-vertex</code></td></tr>
+    <tr><td><strong>API 키</strong></td><td>API 직접 사용 개발자</td><td>환경 변수(시스템 설정값) <code>ANTHROPIC_API_KEY</code></td></tr>
+    <tr><td><strong>Amazon Bedrock</strong></td><td>AWS 클라우드 사용 기업</td><td><code>/setup-bedrock</code> (기업용)</td></tr>
+    <tr><td><strong>Google Vertex AI</strong></td><td>Google Cloud 사용 기업</td><td><code>/setup-vertex</code> (기업용)</td></tr>
   </table></div>
 
   <h3>인증 상태 확인 / 로그아웃</h3>
@@ -443,14 +443,16 @@ claude                     # Claude Code 실행</pre>
     <tr><td><code>Ctrl+C</code></td><td>현재 작업 중단</td></tr>
     <tr><td><code>Ctrl+D</code> 또는 <code>/exit</code></td><td>종료</td></tr>
     <tr><td><code>Tab</code></td><td>자동 완성</td></tr>
-    <tr><td><code>Shift+Tab</code></td><td>권한 모드 순환 (auto 등)</td></tr>
+    <tr><td><code>Shift+Tab</code></td><td>권한 모드 변경 (파일 수정 허용 범위 조절)</td></tr>
   </table></div>
 
-  <h3>세션 이어받기</h3>
-  <div class="cb"><pre>claude -c              # 가장 최근 세션 이어서 시작
+  <details style="margin-top:1rem">
+  <summary style="cursor:pointer;color:var(--text2);font-size:.9rem;font-weight:600">⌨️ 터미널에서 세션 이어받기 (CLI 사용자용)</summary>
+  <div class="cb" style="margin-top:.75rem"><pre>claude -c              # 가장 최근 세션 이어서 시작
 claude -r "세션이름"    # 특정 세션 재개
 claude -n "이름"       # 새 세션 이름 지정</pre>
     <button class="cp">복사</button></div>
+</details>
 </section>
 
 <!-- S04: 슬래시 명령어 -->
@@ -491,26 +493,28 @@ claude -n "이름"       # 새 세션 이름 지정</pre>
   <div class="tw"><table>
     <tr><th>스킬</th><th>기능</th><th>비고</th></tr>
     <tr><td><code>/code-review</code></td><td>diff를 버그/정확성 관점에서 검토</td><td></td></tr>
-    <tr><td><code>/batch</code></td><td>대규모 변경을 병렬 worktree로 분산 실행</td><td></td></tr>
+    <tr><td><code>/batch</code></td><td>대규모 변경을 여러 작업으로 나눠 동시 실행</td><td></td></tr>
     <tr><td><code>/run</code></td><td>앱 빌드 및 실행해서 변경사항 검증</td><td>v2.1.145+</td></tr>
     <tr><td><code>/verify</code></td><td>빌드/실행/검증 (테스트 대신 실제 동작 확인)</td><td>v2.1.145+</td></tr>
-    <tr><td><code>/run-skill-generator</code></td><td>/run, /verify용 프로젝트별 레시피 생성</td><td>v2.1.145+</td></tr>
+    <tr><td><code>/run-skill-generator</code></td><td>내 프로젝트 실행 방법을 자동으로 파악</td><td>v2.1.145+</td></tr>
     <tr><td><code>/claude-api</code></td><td>Claude API 참조 자료 로드</td><td></td></tr>
     <tr><td><code>/loop [간격] [프롬프트]</code></td><td>프롬프트 반복 실행 (자동 페이싱)</td><td></td></tr>
     <tr><td><code>/schedule</code></td><td>Routines 생성/실행 (클라우드 스케줄링)</td><td></td></tr>
-    <tr><td><code>/ultrareview [PR]</code></td><td>클라우드 멀티에이전트 코드 리뷰</td><td>Pro/Max 3회 무료</td></tr>
+    <tr><td><code>/ultrareview [PR]</code></td><td>여러 AI가 협력하는 심층 코드 리뷰</td><td>Pro/Max 3회 무료</td></tr>
     <tr><td><code>/security-review</code></td><td>보안 취약점 분석</td><td></td></tr>
   </table></div>
 
-  <h3>자주 쓰는 CLI 플래그</h3>
-  <div class="cb"><pre>claude -p "할 일"           # 대화 없이 바로 실행하고 종료 (--print)
-claude -c                   # 마지막 세션 이어서 (--continue)
+  <details style="margin-top:1.5rem">
+  <summary style="cursor:pointer;color:var(--text2);font-size:.9rem;font-weight:600">⌨️ CLI 플래그 (터미널 사용자용) 펼쳐보기</summary>
+  <div class="cb" style="margin-top:.75rem"><pre>claude -p "할 일"           # 대화 없이 바로 실행하고 종료
+claude -c                   # 마지막 세션 이어서
 claude --model sonnet       # 모델 지정
 claude --effort high        # 노력 수준 설정
 claude --permission-mode plan   # Plan 모드로 시작
-claude --add-dir ../공유폴더    # 추가 디렉토리 접근 허용
+claude --add-dir ../공유폴더    # 추가 폴더 접근 허용
 claude --bg "작업 설명"     # 백그라운드 에이전트로 실행</pre>
     <button class="cp">복사</button></div>
+</details>
 </section>
 
 <!-- S05: CLAUDE.md -->
@@ -528,7 +532,7 @@ claude --bg "작업 설명"     # 백그라운드 에이전트로 실행</pre>
     <tr><th>위치</th><th>범위</th><th>공유</th></tr>
     <tr><td><code>~/.claude/CLAUDE.md</code></td><td>내 모든 프로젝트</td><td>본인만</td></tr>
     <tr><td><code>./CLAUDE.md</code> 또는 <code>./.claude/CLAUDE.md</code></td><td>해당 프로젝트</td><td>팀원 (Git 커밋)</td></tr>
-    <tr><td><code>./CLAUDE.local.md</code></td><td>해당 프로젝트 (개인)</td><td>본인만 (.gitignore에 추가)</td></tr>
+    <tr><td><code>./CLAUDE.local.md</code></td><td>해당 프로젝트 (개인)</td><td>본인만 (Git 공유 제외 목록에 추가)</td></tr>
   </table></div>
 
   <div class="box box-tip">
@@ -538,24 +542,20 @@ claude --bg "작업 설명"     # 백그라운드 에이전트로 실행</pre>
 
   <h3>CLAUDE.md 예시</h3>
   <div class="cb"><div class="cb-lbl">./CLAUDE.md</div>
-    <pre># 팀 규칙
+    <pre># 작업 규칙
 
-## 언어
+## 응답 방식
 - 모든 답변은 한국어로
-- 기술 용어·에러메시지는 영어 그대로
+- 결론을 먼저 말하고, 이유는 그 다음에
 
-## 코딩 스타일
-- 들여쓰기: 2칸 공백
-- 변수명: camelCase
-- 세미콜론 사용 (TypeScript)
+## 파일 작업 규칙
+- 파일을 수정하기 전에 무엇을 바꿀지 먼저 알려줄 것
+- 한 번에 하나의 파일만 수정할 것
+- API 키나 비밀번호는 절대 코드에 직접 넣지 말 것
 
-## 금지 사항
-- API 키 하드코딩 절대 금지 (.env 파일 사용)
-- main 브랜치 직접 커밋 금지
-
-## 커밋 규칙
-형식: type(scope): 설명
-예: feat(auth): 소셜 로그인 추가</pre>
+## 하지 말 것
+- 내가 요청하지 않은 파일을 수정하지 말 것
+- 새 프로그램(패키지)을 내 허락 없이 설치하지 말 것</pre>
     <button class="cp">복사</button></div>
 
   <h3>.claude/rules/ — 규칙 분리 관리</h3>
@@ -582,7 +582,7 @@ paths:
 
   <h4>@import로 파일 불러오기</h4>
   <div class="cb"><div class="cb-lbl">CLAUDE.md</div>
-    <pre>@README              # README 파일을 컨텍스트로 포함
+    <pre>@README              # README 파일을 참고자료(컨텍스트)로 포함
 @package.json        # 패키지 정보 포함
 
 # 추가 규칙
@@ -612,14 +612,14 @@ paths:
       <tr><th></th><th>CLAUDE.md</th><th>Auto-Memory</th></tr>
       <tr><td><strong>작성자</strong></td><td>사용자</td><td>Claude 자동 저장</td></tr>
       <tr><td><strong>내용</strong></td><td>지침 &amp; 규칙</td><td>학습 &amp; 패턴</td></tr>
-      <tr><td><strong>예시</strong></td><td>코딩 표준, 금지 사항</td><td>빌드 명령, 디버깅 인사이트</td></tr>
+      <tr><td><strong>예시</strong></td><td>코딩 표준, 금지 사항</td><td>빌드 명령, 문제 해결 패턴</td></tr>
     </table></div>
   </div>
 
   <h3>메모리 파일 위치</h3>
   <div class="cb"><pre>~/.claude/projects/&lt;프로젝트경로&gt;/memory/
 ├── MEMORY.md        # 인덱스 (모든 세션에 처음 200줄 로드)
-├── debugging.md     # 디버깅 패턴 (필요시 로드)
+├── debugging.md     # 문제 해결 패턴 (필요시 로드)
 └── api-conventions.md  # API 설계 결정 (필요시 로드)</pre></div>
   <p><code>MEMORY.md</code>의 처음 200줄 또는 25KB가 세션 시작 시 자동 로드된다. 상세 내용은 별도 주제 파일에 저장된다.</p>
 
@@ -631,15 +631,17 @@ paths:
 > 내 이름은 재연이야, 기억해줘</pre>
     <button class="cp">복사</button></div>
 
-  <h3>비활성화 방법</h3>
-  <div class="cb"><pre># settings.json에서
+  <details style="margin-top:1rem">
+  <summary style="cursor:pointer;color:var(--text2);font-size:.9rem;font-weight:600">⚙️ Auto-Memory 비활성화 방법</summary>
+  <div class="cb" style="margin-top:.75rem"><pre># settings.json에서
 {
   "autoMemoryEnabled": false
 }
 
-# 환경 변수로
+# 터미널 환경변수(시스템 설정값)로
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude</pre>
     <button class="cp">복사</button></div>
+</details>
 
   <h3>저장 위치 변경</h3>
   <div class="cb"><div class="cb-lbl">~/.claude/settings.json</div>
@@ -692,7 +694,7 @@ git log --since="today 00:00" --oneline 으로 오늘 커밋을 조회하고,
 ### 내일 할 일</pre>
     <button class="cp">복사</button></div>
 
-  <h3>YAML Frontmatter 주요 필드</h3>
+  <h3>스킬 설정 항목 (YAML 형식)</h3>
   <div class="tw"><table>
     <tr><th>필드</th><th>설명</th></tr>
     <tr><td><code>name</code></td><td>스킬 이름 (생략 시 디렉토리명 사용)</td></tr>
@@ -701,12 +703,12 @@ git log --since="today 00:00" --oneline 으로 오늘 커밋을 조회하고,
     <tr><td><code>disable-model-invocation</code></td><td><code>true</code> → 자동 호출 차단, 수동 <code>/스킬명</code>만 가능</td></tr>
     <tr><td><code>user-invocable</code></td><td><code>false</code> → <code>/</code> 메뉴에서 숨김 (Claude만 호출 가능)</td></tr>
     <tr><td><code>allowed-tools</code></td><td>승인 없이 사용할 수 있는 도구 목록</td></tr>
-    <tr><td><code>context</code></td><td><code>fork</code> → 격리된 subagent에서 실행</td></tr>
+    <tr><td><code>context</code></td><td><code>fork</code> → 별도 독립 환경에서 실행</td></tr>
     <tr><td><code>argument-hint</code></td><td>자동완성 시 표시되는 인수 힌트 (예: <code>[파일명]</code>)</td></tr>
     <tr><td><code>paths</code></td><td>특정 파일 패턴에서만 자동 활성화</td></tr>
   </table></div>
 
-  <h3>인수 전달 &amp; 동적 컨텍스트</h3>
+  <h3>인수 전달 &amp; 스킬 실행 시 최신 정보 자동 주입</h3>
   <div class="cb"><div class="cb-lbl">인수 예시 — /fix-issue 123</div>
     <pre>---
 name: fix-issue
@@ -723,7 +725,7 @@ GitHub 이슈 $ARGUMENTS 를 우리 코딩 표준에 맞게 수정한다.
 5. 커밋 생성</pre>
     <button class="cp">복사</button></div>
 
-  <div class="cb"><div class="cb-lbl">동적 컨텍스트 주입 — !`명령어`</div>
+  <div class="cb"><div class="cb-lbl">스킬 실행 시 최신 정보 자동 주입 — !`명령어`</div>
     <pre>---
 description: 현재 변경사항 요약 및 위험 요소 표시
 ---
@@ -755,6 +757,11 @@ description: 현재 변경사항 요약 및 위험 요소 표시
     <button class="done-btn" data-sid="s08">완료 표시</button>
   </div>
 
+  <div class="box box-warn" style="margin-bottom:1rem">
+  <div class="box-title">⚠️ 고급 기능 — 처음엔 건너뛰어도 됩니다</div>
+  <p>Hooks는 강력한 자동화 기능입니다. Claude Code를 어느 정도 익힌 뒤, "매번 반복하는 작업을 자동화하고 싶다"는 생각이 들 때 돌아오세요.</p>
+</div>
+
   <p>훅(Hooks)은 <strong>특정 이벤트 발생 시 자동 실행되는 스크립트</strong>다. 파일 수정 시 lint 자동 실행, Claude 명령 차단, Slack 알림 전송 등 강력한 자동화가 가능하다.</p>
 
   <h3>주요 이벤트</h3>
@@ -777,10 +784,10 @@ description: 현재 변경사항 요약 및 위험 요소 표시
   <h3>훅 타입 5가지</h3>
   <div class="tw"><table>
     <tr><th>타입</th><th>설명</th></tr>
-    <tr><td><code>command</code></td><td>셸 명령어 실행 (기본)</td></tr>
-    <tr><td><code>http</code></td><td>HTTP POST 요청 전송 (웹훅, Slack 등)</td></tr>
+    <tr><td><code>command</code></td><td>터미널(셸) 명령어 실행 (기본)</td></tr>
+    <tr><td><code>http</code></td><td>외부 서비스에 알림 전송 (Slack, 웹훅 등)</td></tr>
     <tr><td><code>mcp_tool</code></td><td>MCP 서버 도구 호출</td></tr>
-    <tr><td><code>prompt</code></td><td>LLM 프롬프트로 판단</td></tr>
+    <tr><td><code>prompt</code></td><td>AI에게 판단을 맡김</td></tr>
     <tr><td><code>agent</code></td><td>다른 Claude 에이전트 호출</td></tr>
   </table></div>
 
@@ -860,7 +867,7 @@ description: 현재 변경사항 요약 및 위험 요소 표시
 
   <div class="box box-warn">
     <div class="box-title">⚠️ 보안</div>
-    <p>MCP 서버는 외부 코드를 실행한다. 신뢰할 수 있는 출처의 서버만 추가하고, <code>GITHUB_TOKEN</code> 같은 민감 정보는 환경 변수로 관리한다.</p>
+    <p>MCP 서버는 외부 코드를 실행한다. 신뢰할 수 있는 출처의 서버만 추가하고, <code>GITHUB_TOKEN</code> 같은 민감 정보는 환경 변수(시스템 설정값)로 관리한다.</p>
   </div>
 
   <h3>인기 MCP 서버</h3>
@@ -868,7 +875,7 @@ description: 현재 변경사항 요약 및 위험 요소 표시
     <tr><th>서버</th><th>기능</th></tr>
     <tr><td><code>@modelcontextprotocol/server-filesystem</code></td><td>지정 폴더 파일 접근</td></tr>
     <tr><td><code>@modelcontextprotocol/server-github</code></td><td>GitHub 이슈, PR, 코드 조작</td></tr>
-    <tr><td><code>@modelcontextprotocol/server-postgres</code></td><td>PostgreSQL 쿼리</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-postgres</code></td><td>PostgreSQL 데이터베이스 조회</td></tr>
     <tr><td><code>@modelcontextprotocol/server-brave-search</code></td><td>웹 검색</td></tr>
     <tr><td><code>@modelcontextprotocol/server-slack</code></td><td>Slack 메시지 전송/조회</td></tr>
     <tr><td><code>@modelcontextprotocol/server-google-drive</code></td><td>Google Drive 파일 접근</td></tr>
@@ -899,21 +906,19 @@ description: 현재 변경사항 요약 및 위험 요소 표시
 
   <h3>한도 절약 팁</h3>
   <div class="steps">
-    <div class="step"><div class="sn">1</div><div class="sb-body"><div class="st">/compact 사용</div><div class="sd">대화가 길어지면 <code>/compact</code>로 압축. 컨텍스트 절약 = 비용 절약.</div></div></div>
+    <div class="step"><div class="sn">1</div><div class="sb-body"><div class="st">/compact 사용</div><div class="sd">대화가 길어지면 <code>/compact</code>로 압축. 대화 기억 공간(컨텍스트) 절약 = 비용 절약.</div></div></div>
     <div class="step"><div class="sn">2</div><div class="sb-body"><div class="st">기능 단위로 /clear</div><div class="sd">기능 하나 완료 후 <code>/clear</code>로 초기화하고 새로 시작.</div></div></div>
     <div class="step"><div class="sn">3</div><div class="sb-body"><div class="st">.claudeignore 활용</div><div class="sd">node_modules, build 폴더 같은 대용량 폴더 제외.</div></div></div>
     <div class="step"><div class="sn">4</div><div class="sb-body"><div class="st">--effort 조절</div><div class="sd">간단한 작업은 <code>--effort low</code>. 복잡한 작업만 <code>high</code>.</div></div></div>
   </div>
 
   <div class="cb"><div class="cb-lbl">.claudeignore 예시</div>
-    <pre>node_modules/
-.git/
-dist/
-build/
-*.log
-*.lock
-__pycache__/
-.env</pre>
+    <pre># Claude가 읽지 않았으면 하는 파일/폴더를 적으세요
+node_modules/     # 외부 라이브러리 폴더 (용량이 큼)
+.git/             # Git 기록 폴더
+build/            # 빌드 결과물
+*.log             # 로그 파일
+.env              # 비밀 설정값 파일 (절대 AI에게 보내지 마세요)</pre>
     <button class="cp">복사</button></div>
 </section>
 
@@ -1028,7 +1033,7 @@ claude doctor</pre><button class="cp">복사</button></div>
     <div class="faq-a"><div class="faq-inner">
       <div class="cb"><pre>claude auth logout
 claude auth login</pre><button class="cp">복사</button></div>
-      <p>그래도 안 되면 <code>~/.claude/</code> 폴더와 <code>~/.claude.json</code>을 삭제 후 재시작한다.</p>
+      <p>그래도 안 되면 <code>~/.claude/</code> 폴더와 <code>~/.claude.json</code>을 삭제 후 재시작한다. (⚠️ 저장된 설정이 모두 초기화됩니다. 신중하게 진행하세요.)</p>
     </div></div>
   </div>
 
@@ -1063,7 +1068,7 @@ claude auth login</pre><button class="cp">복사</button></div>
   <div class="faq">
     <button class="faq-q">파일을 계속 엉뚱하게 수정함<span class="fa">▼</span></button>
     <div class="faq-a"><div class="faq-inner">
-      <p><code>pwd</code>로 현재 위치를 확인하고 올바른 폴더에서 <code>claude</code>를 실행했는지 확인한다. <code>claude doctor</code>로 전반적인 설정 상태도 점검한다.</p>
+      <p><code>pwd</code>(현재 위치 확인 명령어)로 현재 위치를 확인하고 올바른 폴더에서 <code>claude</code>를 실행했는지 확인한다. <code>claude doctor</code>로 전반적인 설정 상태도 점검한다.</p>
     </div></div>
   </div>
 </section>
@@ -1082,7 +1087,7 @@ claude auth login</pre><button class="cp">복사</button></div>
 > [UI 디자인 이미지] 이 레이아웃을 HTML로 만들어줘
 > [버그 화면] 왜 이렇게 보이는지 원인 찾아줘</pre></div>
 
-  <h3>터미널에서 파이프로 Claude 실행 (CLI 전용)</h3>
+  <h3>터미널에서 파이프로 Claude 실행 <span style="font-size:.8rem;color:var(--text3)">(CLI 전용 — 터미널 익숙한 분)</span></h3>
   <div class="cb"><pre># 파일 내용을 Claude에게 보내기
 cat error.log | claude -p "이 에러 원인 알려줘"
 
@@ -1096,8 +1101,8 @@ git diff main | claude -p "이 변경사항에서 버그를 찾아줘"</pre>
 > [UI 디자인 이미지] 이 레이아웃을 HTML로 만들어줘</pre></div>
 
   <h3>@파일 참조로 컨텍스트 지정</h3>
-  <div class="cb"><pre>> @src/api/auth.js 이 파일에 JWT 갱신 로직을 추가해줘
-> @src/components/ 이 폴더의 모든 컴포넌트에 PropTypes를 추가해줘</pre>
+  <div class="cb"><pre>> @README.md 이 파일을 읽고 더 쉽게 다시 써줘
+> @data/sales.csv 이 파일을 분석해서 핵심 인사이트 알려줘</pre>
     <button class="cp">복사</button></div>
 
   <h3>Plan 모드 — 실행 전 계획 확인</h3>
@@ -1115,7 +1120,7 @@ git diff main | claude -p "이 변경사항에서 버그를 찾아줘"</pre>
   <h3>병렬 작업 — /batch</h3>
   <div class="cb"><pre>> /batch 이 코드베이스의 모든 컴포넌트에 TypeScript를 추가해줘</pre>
     <button class="cp">복사</button></div>
-  <p style="font-size:.83rem;color:var(--text2)">대규모 변경을 5~30개 단위로 분해해 병렬 worktree에서 동시 실행한다.</p>
+  <p style="font-size:.83rem;color:var(--text2)">대규모 변경을 여러 단위로 나눠 동시에 실행한다.</p>
 
   <h3>세션 인수인계 패턴</h3>
   <div class="cb"><pre>> 오늘 작업한 내용, 완료된 것, 다음에 할 것을 handoff.md에 정리해줘</pre>
@@ -1171,7 +1176,7 @@ git diff main | claude -p "이 변경사항에서 버그를 찾아줘"</pre>
   </div>
 
   <h3>팀 공용 CLAUDE.md</h3>
-  <p>프로젝트 루트의 <code>CLAUDE.md</code>를 Git에 커밋하면 팀원 모두가 같은 규칙으로 Claude를 사용한다.</p>
+  <p>프로젝트 루트의 <code>CLAUDE.md</code>를 Git(코드 공유 시스템)에 올리면 팀원 모두가 같은 규칙으로 Claude를 사용한다.</p>
 
   <div class="box box-tip">
     <div class="box-title">💡 개인 규칙 + 팀 규칙 분리</div>
@@ -1179,7 +1184,7 @@ git diff main | claude -p "이 변경사항에서 버그를 찾아줘"</pre>
   </div>
 
   <h3>팀 공용 스킬</h3>
-  <p><code>.claude/skills/</code>를 Git에 커밋하면 팀 전체가 같은 스킬을 사용할 수 있다.</p>
+  <p><code>.claude/skills/</code> 폴더를 Git(코드 공유 시스템)에 올리면 팀 전체가 같은 스킬을 사용할 수 있다.</p>
   <div class="cb"><pre>.claude/
 ├── CLAUDE.md            # 팀 규칙 (Git 커밋)
 └── skills/
